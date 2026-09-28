@@ -65,6 +65,13 @@
   figcaption { color: var(--muted); font-size: .85rem; margin-top: .55rem; line-height: 1.5; }
   ul.plain { list-style: none; padding: 0; margin: 0; }
   ul.plain li { margin: .35rem 0; }
+  .banner { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: 1.8rem 0 0; }
+  .banner img {
+    display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 2;
+    border: 1px solid var(--rule); border-radius: 6px; background: #fff;
+  }
+  .banner-caption { color: var(--muted); font-size: .85rem; margin: .55rem 0 0; line-height: 1.5; }
+  @media (max-width: 560px) { .banner { grid-template-columns: 1fr; } }
   footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
 </style>
 </head>
@@ -75,46 +82,40 @@
   <p class="tagline">Machine learning for Earth observation and remote sensing. Berlin, Germany.</p>
   <p><span class="status">Looking for a PhD position in Earth observation, remote sensing or GeoAI, or a research role. Available immediately.</span></p>
 
-  <h2>About</h2>
-  <p>I work on adapting vision foundation models to Earth observation problems where labelled
-  data does not exist. Most of my projects derive training labels from administrative registers,
-  such as crop declarations or cadastral records, that were never made for that purpose, and then
-  deal with the biases those labels carry.</p>
-  <p>A result that has come back in every project so far: past a small model budget, improving the
-  data moves accuracy further than adding model capacity does. I try to measure both sides rather
-  than assume it. I build pipelines as numbered stages with pinned environments so they can be
-  rerun by someone else, and I evaluate on sites and conditions held out from training rather than
-  on random splits.</p>
-
-  <h2>Master's thesis</h2>
-  <p>Carried out at the <b>DLR Earth Observation Center</b>, Oberpfaffenhofen: detection of
-  greenhouses and plastic-covered parcels in southern Germany from 20 cm aerial orthophotos, with
-  no hand-drawn annotation anywhere in training. Labels were derived from EU parcel-level crop
-  declarations and refined against the imagery. The detector combines a frozen satellite-pretrained
-  DINOv3 backbone, decoded back to 20 cm by guided feature upsampling, with a trainable ResNet-34
-  branch and a small fusion head. Supervised by Dr Ursula Gessner (DLR) and Prof Dr Iftikhar Ahmed
-  (University of Europe for Applied Sciences). A paper is in preparation.</p>
+  <div class="banner">
+    <img src="images/sar-mapple-front.gif" loading="lazy"
+         alt="Sentinel-1 SAR image of Mapple glacier with the real calving front in red and the model's front in orange, cycling through zone predictions.">
+    <img src="images/vggt-depth.jpg" loading="lazy"
+         alt="Camera image, predicted depth, LiDAR ground truth and signed error for a driving scene.">
+    <img src="images/dinov3-levir.jpg" loading="lazy"
+         alt="Before and after satellite images with ground truth and predicted building change.">
+  </div>
+  <p class="banner-caption">Left: a calving front drawn from frozen photo-pretrained features on Sentinel-1 SAR (CaFFe).
+  Middle: VGGT-&Omega; depth error on a driving scene, black rings mark moving objects (FZI-AURA).
+  Right: new buildings found from frozen DINOv3 features (LEVIR-CD).</p>
 
   <h2>Projects</h2>
 
   <div class="project">
-    <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
-    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
-    monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
+    <h3><a href="https://github.com/saverin0/sar-transfer-glaciers">Do optical foundation models transfer to SAR?</a></h3>
+    <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders: satellite-pretrained
+    DINOv3, photo-pretrained DINOv3 and C-RADIOv4-H, and two SAR-pretrained encoders. Only small probes
+    and heads are trained on top. A U-Net trained from scratch is the reference.</p>
     <ul class="stats">
-      <li>LEVIR-CD test F1 <b>0.910</b>, IoU <b>0.835</b> — difference head, <b>0.56M</b> parameters</li>
-      <li>Cross-attention head, <b>0.83M</b> parameters: F1 <b>0.908</b>. The smaller head was the one to keep</li>
-      <li>SpaceNet-7 monthly change F1 <b>0.178</b>, building IoU <b>0.704</b> — a far harder task</li>
-      <li>Training-free embedding baselines reach F1 <b>0.013–0.019</b>, so the training carries the result</li>
+      <li>A <b>0.57M</b>-parameter decoder on frozen C-RADIO features matches the <b>7.8M</b>-parameter U-Net on front error: <b>979 &plusmn; 31 m</b> vs <b>979 m</b> on the two test glaciers</li>
+      <li>Per glacier: Columbia <b>1,067</b> vs <b>1,080 m</b>, Mapple <b>464</b> vs <b>474 m</b>; the decoder misses <b>7&ndash;9</b> of 122 fronts per seed, the U-Net <b>3</b></li>
+      <li>Zones, 3-class patch mIoU on test: a linear probe on frozen photo DINOv3 <b>0.610</b>, C-RADIO <b>0.602</b>, U-Net <b>0.594</b></li>
+      <li>Photo-pretrained encoders beat the two SAR-pretrained ones we tried by <b>0.22&ndash;0.25</b> mIoU; satellite pretraining gave no clear advantage over photo pretraining</li>
+      <li>Linear probes alone draw no front on <b>30&ndash;57%</b> of test images: fronts need a learned head</li>
     </ul>
     <figure>
-      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">
-        <img src="images/dinov3-levir.jpg" width="1300" height="658" loading="lazy"
-             alt="Two LEVIR-CD test pairs in four columns: the before image, the after image, the ground truth change mask, and the prediction coloured green for true positives, red for false positives and blue for missed change.">
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">
+        <img src="images/sar-columbia-front.gif" width="900" height="587" loading="lazy"
+             alt="Sentinel-1 SAR image of Columbia glacier with predicted zones coloured, the real calving front in red and the model's front in orange.">
       </a>
-      <figcaption>Two LEVIR-CD test pairs. Left to right: before, after, ground truth change mask, and the
-      difference head’s prediction — green is correct, red a false alarm, blue missed change.
-      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">Notebook</a>.</figcaption>
+      <figcaption>Columbia glacier, Sentinel-1, 2020. The frames cycle through the dataset&rsquo;s labels and each
+      model&rsquo;s zones (rock, glacier, ocean); red is the real calving front, orange the model&rsquo;s. Data: CaFFe, Gourmelon et al. 2022, CC BY 4.0.
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">Repository</a>.</figcaption>
     </figure>
   </div>
 
@@ -137,9 +138,54 @@
              alt="Four frames of a test scene in four columns: camera image, predicted depth, LiDAR ground truth, and signed relative error at the LiDAR pixels.">
       </a>
       <figcaption>A typical test scene at the median depth error. Left to right: camera image,
-      predicted depth, LiDAR ground truth, signed relative error — red is predicted too far, blue too
+      predicted depth, LiDAR ground truth, signed relative error &mdash; red is predicted too far, blue too
       near, black rings mark moving objects. Ground truth from FZI-AURA (CoCar NextGen).
       <a href="https://github.com/saverin0/vggt-omega-aura-benchmark/blob/main/results/figures/01_typical_test_scene_depth.jpg">Full size</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
+    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
+    monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
+    <ul class="stats">
+      <li>LEVIR-CD test F1 <b>0.910</b>, IoU <b>0.835</b> &mdash; difference head, <b>0.56M</b> parameters</li>
+      <li>Cross-attention head, <b>0.83M</b> parameters: F1 <b>0.908</b>. The smaller head was the one to keep</li>
+      <li>SpaceNet-7 monthly change F1 <b>0.178</b>, building IoU <b>0.704</b> &mdash; a far harder task</li>
+      <li>Training-free embedding baselines reach F1 <b>0.013&ndash;0.019</b>, so the training carries the result</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">
+        <img src="images/dinov3-levir.jpg" width="1300" height="658" loading="lazy"
+             alt="Two LEVIR-CD test pairs in four columns: the before image, the after image, the ground truth change mask, and the prediction coloured green for true positives, red for false positives and blue for missed change.">
+      </a>
+      <figcaption>Two LEVIR-CD test pairs. Left to right: before, after, ground truth change mask, and the
+      difference head&rsquo;s prediction &mdash; green is correct, red a false alarm, blue missed change.
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">Notebook</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/owl-caribou-overhead">Overhead caribou detectors across herds and years</a></h3>
+    <p>Cross-herd, cross-year evaluation of four overhead detection models (one caribou-specific) on
+    aerial survey imagery of the Central Arctic Herd, Alaska, 2022, after development on the Porcupine
+    Herd, 2017. Error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
+    <ul class="stats">
+      <li>Locked test domain: <b>2,607</b> patches from 43 mosaics, <b>12,456</b> annotated animals</li>
+      <li>The two best models tie threshold-free: average precision <b>0.978</b> vs <b>0.977</b>, paired difference <b>+0.001</b> [&minus;0.004, +0.008] over 2,000 resamples</li>
+      <li>The gap at the fixed setting is an operating-point effect: one model holds F1 above <b>0.95</b> for any relative cut from 0.15 to 0.55, the other only from 0.35 to 0.60</li>
+      <li>A 16 px border band is <b>12%</b> of the area but holds <b>53%</b> of the errors; at full resolution most are real caribou the patch&rsquo;s ground truth does not list</li>
+      <li>The two remaining models trail clearly: average precision <b>0.927</b> and <b>0.919</b></li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/owl-caribou-overhead">
+        <img src="images/owl-precision-recall.png" width="1590" height="449" loading="lazy"
+             alt="Three panels: precision-recall curves of four models on full patches, the same on patch interiors, and the share of empty patches with a false alarm as recall rises.">
+      </a>
+      <figcaption>Left: precision-recall of the four models on full patches, dots mark the fixed evaluation
+      setting. Middle: the same with the border band left out. Right: false alarms on empty ground stay near
+      zero for the two best models until recall passes about 0.96.
+      <a href="https://github.com/saverin0/owl-caribou-overhead">Repository</a>.</figcaption>
     </figure>
   </div>
 
@@ -149,7 +195,7 @@
     composites masked with yearly 10 m crop type maps and aggregated with exact partial-pixel zonal
     statistics. The Sentinel-2 half of a two-person MSc capstone.</p>
     <ul class="stats">
-      <li><b>96</b> NUTS-3 regions, March to June, <b>2017–2024</b></li>
+      <li><b>96</b> NUTS-3 regions, March to June, <b>2017&ndash;2024</b></li>
       <li><b>1.13 TB</b> of input imagery, 4,768 GeoTIFFs across 29 MGRS tiles per month</li>
       <li><b>1.64 billion</b> winter wheat pixels at 10 m, processed in <b>5.5 h</b> on one A100</li>
       <li>Over <b>151,793</b> OCO-2 footprints, solar-induced fluorescence tracks NIRv (<b>r = 0.54</b>) better than NDVI (<b>r = 0.42</b>)</li>
@@ -165,9 +211,25 @@
     </figure>
   </div>
 
+  <h2>Master's thesis</h2>
+  <p>Carried out at the <b>DLR Earth Observation Center</b>, Oberpfaffenhofen: detection of
+  greenhouses and plastic-covered parcels in southern Germany from 20 cm aerial orthophotos, with
+  no hand-drawn annotation anywhere in training. Labels were derived from EU parcel-level crop
+  declarations and refined against the imagery. The detector combines a frozen satellite-pretrained
+  DINOv3 backbone, decoded back to 20 cm by guided feature upsampling, with a trainable ResNet-34
+  branch and a small fusion head. Supervised by Dr Ursula Gessner (DLR) and Prof Dr Iftikhar Ahmed
+  (University of Europe for Applied Sciences). A paper is in preparation.</p>
+
+  <h2>How I work</h2>
+  <p>Most of my projects derive training labels from registers or benchmarks that were never made
+  for the purpose, then deal with the biases those labels carry. A result that has come back in every
+  project so far: past a small model budget, improving the data moves accuracy further than adding
+  model capacity does, and I measure both sides rather than assume it. Pipelines are numbered stages
+  with pinned environments so someone else can rerun them, and evaluation is on sites and conditions
+  held out from training, not on random splits.</p>
+
   <h2>Contact</h2>
   <ul class="plain">
-    <li>Email: <a href="mailto:abhishekzsingh.2p@gmail.com">abhishekzsingh.2p@gmail.com</a></li>
     <li>GitHub: <a href="https://github.com/saverin0">saverin0</a></li>
     <li>LinkedIn: <a href="https://www.linkedin.com/in/abhishekzsingh">abhishekzsingh</a></li>
   </ul>
