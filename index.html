@@ -44,10 +44,6 @@
   a { color: var(--link); text-decoration: none; }
   a:hover { text-decoration: underline; }
   .tagline { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.5rem; }
-  .status {
-    display: inline-block; padding: .5rem .85rem; border: 1px solid var(--rule);
-    border-radius: 6px; background: var(--card); font-size: .95rem;
-  }
   .project { margin: 0 0 2.5rem; }
   .project:last-child { margin-bottom: 0; }
   .stats { list-style: none; margin: .8rem 0 0; padding: 0; }
@@ -80,7 +76,6 @@
 
   <h1>Abhishek Singh</h1>
   <p class="tagline">Machine learning for Earth observation and remote sensing. Berlin, Germany.</p>
-  <p><span class="status">Looking for a PhD position in Earth observation, remote sensing or GeoAI, or a research role. Available immediately.</span></p>
 
   <div class="banner">
     <img src="images/sar-mapple-front.gif" loading="lazy"
@@ -179,12 +174,13 @@
     </ul>
     <figure>
       <a href="https://github.com/saverin0/owl-caribou-overhead">
-        <img src="images/owl-precision-recall.png" width="1590" height="449" loading="lazy"
-             alt="Three panels: precision-recall curves of four models on full patches, the same on patch interiors, and the share of empty patches with a false alarm as recall rises.">
+        <img src="images/owl-missed-in-clear-view.jpg" width="1564" height="856" loading="lazy"
+             alt="Eight aerial survey patches where the best detector missed the most caribou in clear view. Found animals are green, misses orange circles, false alarms pink crosses, the dashed line is the border band.">
       </a>
-      <figcaption>Left: precision-recall of the four models on full patches, dots mark the fixed evaluation
-      setting. Middle: the same with the border band left out. Right: false alarms on empty ground stay near
-      zero for the two best models until recall passes about 0.96.
+      <figcaption>The eight patches where the best model missed the most animals in clear view: found animals
+      green, misses orange circles, false alarms pink crosses, the dashed line the 16 px border band. The misses
+      have no single cause: fully visible adults, two close animals covered by one detection, and points placed at
+      the wrong end of the body. Survey imagery from the Zenodo release, CC BY-NC-SA 4.0.
       <a href="https://github.com/saverin0/owl-caribou-overhead">Repository</a>.</figcaption>
     </figure>
   </div>
