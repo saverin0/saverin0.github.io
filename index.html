@@ -188,6 +188,32 @@
   </div>
 
   <div class="project">
+    <h3><a href="https://github.com/saverin0/uav-lidar-vs-satellite">Drone LiDAR against satellite products</a></h3>
+    <p>Raw drone sensor logs of two MARS-LVIG flights in Armenia, a river valley and a small town,
+    turned into DSM, DTM, nDSM and land cover at 0.5&nbsp;m with our own ROS&nbsp;2 readers, gyro-aided
+    poses and a ground filter written in numpy, then compared with Copernicus GLO-30, ESA WorldCover,
+    a global canopy height map, Sentinel-2 and OpenStreetMap.</p>
+    <ul class="stats">
+      <li>GLO-30 against the drone DSM on bare ground, RMSE <b>0.80&nbsp;m</b> in the valley and <b>0.45&nbsp;m</b> in the town</li>
+      <li>Over buildings GLO-30 sits <b>0.74&nbsp;m</b> below the drone top surface (median of 72 posts), over trees <b>4.76&nbsp;m</b> and <b>2.31&nbsp;m</b> below</li>
+      <li>WorldCover agrees on <b>82%</b> of the valley and <b>32%</b> of the town, where it calls the gardens trees and grass; <b>78%</b> of the drone built-up pixels are built-up to WorldCover too</li>
+      <li>The canopy height map misses <b>85%</b> and <b>53%</b> of the drone vegetation 2&nbsp;m or taller</li>
+      <li><b>245</b> and <b>324</b> million points, overlapping flight lines agree to <b>0.04&nbsp;m</b> and <b>0.02&nbsp;m</b> RMS</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/uav-lidar-vs-satellite">
+        <img src="images/uav-lidar-valley.gif" width="900" height="600" loading="lazy"
+             alt="Eight frames of the valley flight on one map, the drone DSM, DTM and land cover at 0.5 m, then the Copernicus DEM, ESA WorldCover, the Meta and WRI canopy height map, Sentinel-2 and OpenStreetMap.">
+      </a>
+      <figcaption>The valley flight, the drone products and the five public layers they are checked
+      against, on the same map. Drone data from MARS-LVIG (HKU MaRS lab) and UAVScenes, CC BY-NC-SA 4.0,
+      with Copernicus GLO-30, ESA WorldCover, the Meta and WRI canopy height map (CC BY 4.0), Sentinel-2
+      and &copy; OpenStreetMap contributors (ODbL).
+      <a href="https://github.com/saverin0/uav-lidar-vs-satellite">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
     <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
     <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
     monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
