@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhishek Singh</title>
+<meta name="description" content="Machine learning for Earth observation and remote sensing. MSc Data Science, master's thesis at the DLR Earth Observation Center. Berlin, Germany.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5c5c5c;
+    --rule: #e2e2e2;
+    --link: #0b5ea8;
+    --card: #fafafa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --fg: #e8e8e8;
+      --muted: #9aa0a6;
+      --rule: #2c2f36;
+      --link: #79b8ff;
+      --card: #1b1e24;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0 16px;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 4rem 0 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .3rem; letter-spacing: -.02em; }
+  h2 {
+    font-size: 1.05rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); font-weight: 600;
+    margin: 3rem 0 1rem; padding-bottom: .4rem; border-bottom: 1px solid var(--rule);
+  }
+  h3 { font-size: 1.1rem; margin: 0 0 .4rem; }
+  p { margin: 0 0 1rem; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .tagline { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.5rem; }
+  .project { margin: 0 0 2.5rem; }
+  .project:last-child { margin-bottom: 0; }
+  .stats { list-style: none; margin: .8rem 0 0; padding: 0; }
+  .stats li {
+    padding: .35rem 0 .35rem .9rem; border-left: 2px solid var(--rule);
+    font-size: .95rem; color: var(--fg);
+  }
+  .stats b { font-variant-numeric: tabular-nums; }
+  .note { color: var(--muted); font-size: .95rem; }
+  figure { margin: 1.3rem 0 0; }
+  figure img {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--rule); border-radius: 6px; background: #fff;
+  }
+  figcaption { color: var(--muted); font-size: .85rem; margin-top: .55rem; line-height: 1.5; }
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li { margin: .35rem 0; }
+  .banner { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: 1.8rem 0 0; }
+  .banner img {
+    display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 2;
+    border: 1px solid var(--rule); border-radius: 6px; background: #fff;
+  }
+  .banner-caption { color: var(--muted); font-size: .85rem; margin: .55rem 0 0; line-height: 1.5; }
+  @media (max-width: 560px) { .banner { grid-template-columns: 1fr; } }
+  footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Abhishek Singh</h1>
+  <p class="tagline">Machine learning for Earth observation and remote sensing. Berlin, Germany.</p>
+
+  <div class="banner">
+    <img src="images/sar-mapple-front.gif" loading="lazy"
+         alt="Sentinel-1 SAR image of Mapple glacier with the real calving front in red and the model's front in orange, cycling through zone predictions.">
+    <img src="images/vggt-depth-typical-scene.gif" loading="lazy"
+         alt="Camera image, predicted depth, LiDAR ground truth and signed error for a driving scene, all 40 frames.">
+    <img src="images/dinov3-levir.jpg" loading="lazy"
+         alt="Before and after satellite images with ground truth and predicted building change.">
+  </div>
+  <p class="banner-caption">From left, a calving front drawn from frozen photo-pretrained features on Sentinel-1 SAR (CaFFe);
+  VGGT-&Omega; depth error on a driving scene, black rings mark moving objects (FZI-AURA);
+  new buildings found from frozen DINOv3 features (LEVIR-CD).</p>
+
+  <h2>Projects</h2>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/sar-transfer-glaciers">Do optical foundation models transfer to SAR?</a></h3>
+    <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders (satellite-pretrained
+    DINOv3, photo-pretrained DINOv3 and C-RADIOv4-H, and two SAR-pretrained encoders). Only small probes
+    and heads are trained on top. A U-Net trained from scratch is the reference.</p>
+    <ul class="stats">
+      <li>A <b>0.57M</b>-parameter decoder on frozen C-RADIO features matches the <b>7.8M</b>-parameter U-Net on front error, <b>979 &plusmn; 31 m</b> vs <b>979 m</b> on the two test glaciers</li>
+      <li>Per glacier, Columbia <b>1,067</b> vs <b>1,080 m</b> and Mapple <b>464</b> vs <b>474 m</b>; the decoder misses <b>7&ndash;9</b> of 122 fronts per seed, the U-Net <b>3</b></li>
+      <li>Zones, 3-class patch mIoU on test, from a linear probe on frozen photo DINOv3 <b>0.610</b>, C-RADIO <b>0.602</b>, U-Net <b>0.594</b></li>
+      <li>Photo-pretrained encoders beat the two SAR-pretrained ones we tried by <b>0.22&ndash;0.25</b> mIoU; satellite pretraining gave no clear advantage over photo pretraining</li>
+      <li>Linear probes alone draw no front on <b>30&ndash;57%</b> of test images, so fronts need a learned head</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">
+        <img src="images/sar-columbia-front.gif" width="900" height="587" loading="lazy"
+             alt="Sentinel-1 SAR image of Columbia glacier with predicted zones coloured, the real calving front in red and the model's front in orange.">
+      </a>
+      <figcaption>Columbia glacier, Sentinel-1, 2020. The frames cycle through the dataset&rsquo;s labels and each
+      model&rsquo;s zones (rock, glacier, ocean); red is the real calving front, orange the model&rsquo;s. Data from CaFFe, Gourmelon et al. 2022, CC BY 4.0.
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/sar-transfer-domains">Do frozen encoders transfer to radar images outside glaciers?</a></h3>
+    <p>Part two of the SAR study. The same frozen pipeline, with nothing tuned per dataset, on four
+    Sentinel-1 datasets, glacial lakes, snow, forest types and alpine glaciers. The satellite-pretrained
+    DINOv3 and C-RADIOv4-H stay frozen; only a linear probe and a small decoder are trained.</p>
+    <ul class="stats">
+      <li>With the decoder, satellite DINOv3 is ahead of C-RADIO on every dataset and test split, most on snow with IoU <b>0.735</b> vs <b>0.602</b>, the reverse of the glacier study</li>
+      <li>In the one like-for-like published comparison, frozen features reach a snow F1 of <b>0.847</b> against <b>0.897</b> for a U-Net trained on the same two radar channels</li>
+      <li>Where the published models also use optical data, frozen radar-only features reach about <b>60&ndash;80%</b> of their scores</li>
+      <li>From one lake patch, <b>83%</b> of the 100 most similar test patches are lake for satellite DINOv3, against <b>37%</b> for C-RADIO</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-domains">
+        <img src="images/sar-domains-four.gif" width="640" height="682" loading="lazy"
+             alt="One Sentinel-1 test chip each from glacial lakes, snow, forest types and alpine glaciers, shown as radar, then the dataset's labels, then the frozen satellite DINOv3 output.">
+      </a>
+      <figcaption>One test chip from each of the four datasets, Sentinel-1. Radar, the dataset's labels, then the
+      satellite DINOv3's output; each chip was picked because its score is close to the test-set score. Data from
+      Glacial-Lake-Bench (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0)
+      and the GlaViTU tile dataset (CC BY 4.0).
+      <a href="https://github.com/saverin0/sar-transfer-domains">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/sar-transfer-distillation">Can a radar student learn from frozen teachers?</a></h3>
+    <p>Part four of the SAR study. A C-RADIO-style ViT-B student is distilled from four frozen
+    teachers, SigLIP2, satellite DINOv3, PE-Spatial and TerraFM-B reading Sentinel-1, then scored with
+    frozen features on the four radar datasets of part two. Every rule was fixed before a score was seen.</p>
+    <ul class="stats">
+      <li>The student does not reach the frozen satellite DINOv3, it is behind on all four datasets by <b>0.030</b> to <b>0.055</b></li>
+      <li>The radar-reading teacher helps, snow IoU <b>0.659</b> against <b>0.603</b> without it and alpine glaciers <b>0.508</b> against <b>0.477</b>, ties on lakes and forest</li>
+      <li>SigLIP2 NaFlex or FixRes as the first teacher makes no difference, <b>4</b> ties out of 4</li>
+      <li>Three further checks, a finer 8 px grid, radar coherence as an extra input and a compiled decoder step, change none of this</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-distillation">
+        <img src="images/sar-distillation-features.gif" width="900" height="506" loading="lazy"
+             alt="Patch features of the frozen satellite DINOv3 and two distilled students shown as colours, next to the radar and the labels, one Sentinel-1 validation chip each from glacial lakes, snow, forest types and alpine glaciers.">
+      </a>
+      <figcaption>What each model sees, its patch features turned into colours with one PCA per image, next to
+      the radar and the labels, one validation chip per dataset, Sentinel-1. Data from Glacial-Lake-Bench
+      (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0) and the GlaViTU
+      tile dataset (CC BY 4.0).
+      <a href="https://github.com/saverin0/sar-transfer-distillation">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Where VGGT-&Omega; fails on real driving data</a></h3>
+    <p>A stratified failure analysis of the released VGGT-&Omega; 3D reconstruction checkpoint on
+    FZI-AURA, a dataset published after the model and therefore outside its training data. Error is
+    broken down by weather, lighting and object motion instead of averaged, with predictions written
+    down before the runs.</p>
+    <ul class="stats">
+      <li>Held-out test split, AbsRel <b>0.082</b>, &delta;&lt;1.25 = <b>94.3%</b>, across 107 unseen scenes</li>
+      <li>Moving objects <b>0.203</b> against parked <b>0.099</b> and background <b>0.077</b></li>
+      <li>Counting only object interiors, moving is still worse by <b>+0.062</b> in 70 of 76 scenes</li>
+      <li>Dry daylight <b>0.081</b>, wet night <b>0.159</b>, wet twilight <b>0.245</b></li>
+      <li><b>394</b> scenes analysed; the 20 scenes every rule was tuned on are excluded from all tables</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">
+        <img src="images/vggt-depth-typical-scene.gif" width="738" height="648" loading="lazy"
+             alt="All 40 frames of a test scene, each with the camera image, predicted depth, LiDAR ground truth and signed relative error at the LiDAR points.">
+      </a>
+      <figcaption>A typical test scene at the median depth error, all 40 frames. Top camera image and
+      predicted depth, bottom LiDAR ground truth and signed relative error &mdash; red is predicted too far, blue too
+      near, black rings mark moving objects. Data from FZI-AURA (CoCar NextGen), CC BY-SA 4.0.
+      <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
+    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
+    monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
+    <ul class="stats">
+      <li>LEVIR-CD test F1 <b>0.910</b>, IoU <b>0.835</b> &mdash; difference head, <b>0.56M</b> parameters</li>
+      <li>Cross-attention head, <b>0.83M</b> parameters, F1 <b>0.908</b>. The smaller head was the one to keep</li>
+      <li>SpaceNet-7 monthly change F1 <b>0.178</b>, building IoU <b>0.704</b> &mdash; a far harder task</li>
+      <li>Training-free embedding baselines reach F1 <b>0.013&ndash;0.019</b>, so the training carries the result</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">
+        <img src="images/dinov3-levir.jpg" width="1300" height="658" loading="lazy"
+             alt="Two LEVIR-CD test pairs in four columns, the before image, the after image, the ground truth change mask, and the prediction coloured green for true positives, red for false positives and blue for missed change.">
+      </a>
+      <figcaption>Two LEVIR-CD test pairs. From left, before, after, ground truth change mask, and the
+      difference head&rsquo;s prediction &mdash; green is correct, red a false alarm, blue missed change.
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">Notebook</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/owl-caribou-overhead">Overhead caribou detectors across herds and years</a></h3>
+    <p>Cross-herd, cross-year evaluation of four overhead detection models (one caribou-specific) on
+    aerial survey imagery of the Central Arctic Herd, Alaska, 2022, after development on the Porcupine
+    Herd, 2017. Error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
+    <ul class="stats">
+      <li>Locked test domain of <b>2,607</b> patches from 43 mosaics, <b>12,456</b> annotated animals</li>
+      <li>The two best models tie threshold-free, with average precision <b>0.978</b> vs <b>0.977</b>, paired difference <b>+0.001</b> [&minus;0.004, +0.008] over 2,000 resamples</li>
+      <li>The gap at the fixed setting is an operating-point effect; one model holds F1 above <b>0.95</b> for any relative cut from 0.15 to 0.55, the other only from 0.35 to 0.60</li>
+      <li>A 16 px border band is <b>12%</b> of the area but holds <b>53%</b> of the errors; at full resolution most are real caribou the patch&rsquo;s ground truth does not list</li>
+      <li>The two remaining models trail clearly, with average precision <b>0.927</b> and <b>0.919</b></li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/owl-caribou-overhead">
+        <img src="images/owl-missed-in-clear-view.jpg" width="1564" height="856" loading="lazy"
+             alt="Eight aerial survey patches where the best detector missed the most caribou in clear view. Found animals are green, misses orange circles, false alarms pink crosses, the dashed line is the border band.">
+      </a>
+      <figcaption>The eight patches where the best model missed the most animals in clear view. Found animals are
+      green, misses orange circles, false alarms pink crosses, the dashed line the 16 px border band. The misses
+      have no single cause, among them fully visible adults, two close animals covered by one detection, and points placed at
+      the wrong end of the body. Survey imagery from the Zenodo release, CC BY-NC-SA 4.0.
+      <a href="https://github.com/saverin0/owl-caribou-overhead">Repository</a>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="project">
+    <h3><a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2">Winter wheat vegetation indices for Bavaria</a></h3>
+    <p>Monthly NDVI and NIRv for winter wheat across every district of Bavaria, from Sentinel-2
+    composites masked with yearly 10 m crop type maps and aggregated with exact partial-pixel zonal
+    statistics. The Sentinel-2 half of a two-person MSc capstone.</p>
+    <ul class="stats">
+      <li><b>96</b> NUTS-3 regions, March to June, <b>2017&ndash;2024</b></li>
+      <li><b>1.13 TB</b> of input imagery, 4,768 GeoTIFFs across 29 MGRS tiles per month</li>
+      <li><b>1.64 billion</b> winter wheat pixels at 10 m, processed in <b>5.5 h</b> on one A100</li>
+      <li>Over <b>151,793</b> OCO-2 footprints, solar-induced fluorescence tracks NIRv (<b>r = 0.54</b>) better than NDVI (<b>r = 0.42</b>)</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">
+        <img src="images/bavaria-ndvi.jpg" width="1400" height="659" loading="lazy"
+             alt="Line chart of winter wheat NDVI for March to June, one line per year from 2017 to 2024, peaking in May.">
+      </a>
+      <figcaption>Winter wheat NDVI across Bavaria, March to June, one line per year from 2017 to
+      2024, with error bars over the 96 districts. Every year peaks in May.
+      <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">Notebook</a>.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Master's thesis</h2>
+  <p>Carried out at the <b>DLR Earth Observation Center</b>, Oberpfaffenhofen, on the detection of
+  greenhouses and plastic-covered parcels in southern Germany from 20 cm aerial orthophotos, with
+  no hand-drawn annotation anywhere in training. Labels were derived from EU parcel-level crop
+  declarations and refined against the imagery. The detector combines a frozen satellite-pretrained
+  DINOv3 backbone, decoded back to 20 cm by guided feature upsampling, with a trainable ResNet-34
+  branch and a small fusion head. Supervised by Dr Ursula Gessner (DLR) and Prof Dr Iftikhar Ahmed
+  (University of Europe for Applied Sciences). A paper is in preparation.</p>
+
+  <h2>How I work</h2>
+  <p>Most of my projects derive training labels from registers or benchmarks that were never made
+  for the purpose, then deal with the biases those labels carry. A result that has come back in every
+  project so far is that, past a small model budget, improving the data moves accuracy further than adding
+  model capacity does, and I measure both sides rather than assume it. Pipelines are numbered stages
+  with pinned environments so someone else can rerun them, and evaluation is on sites and conditions
+  held out from training, not on random splits.</p>
+
+  <h2>Contact</h2>
+  <ul class="plain">
+    <li>GitHub &mdash; <a href="https://github.com/saverin0">saverin0</a></li>
+    <li>LinkedIn &mdash; <a href="https://www.linkedin.com/in/abhishekzsingh">abhishekzsingh</a></li>
+  </ul>
+
+  <footer>
+    Every number on this page is reported in the linked repository it belongs to.
+  </footer>
+
+</main>
+</body>
+</html>
