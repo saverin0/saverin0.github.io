@@ -5,16 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Abhishek Singh</title>
 <meta name="description" content="Machine learning for Earth observation and remote sensing. MSc Data Science, master's thesis at the DLR Earth Observation Center. Berlin, Germany.">
-<script>
-(function () {
-  var t = null;
-  try { t = localStorage.getItem('io-theme'); } catch (e) {}
-  if (t !== 'dark' && t !== 'light') {
-    t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', t);
-})();
-</script>
+<!-- The page always opens in the day view. It does not follow the visitor's dark mode, and this line asks browsers not to darken it on their own. -->
+<meta name="color-scheme" content="only light">
 <style>
   :root {
     --bg: #edf2f6; --card: #ffffff; --ink: #1b2028; --soft: #566070; --rule: #c4ced8; --link: #2458a6; --sign: #e8742a;
@@ -443,8 +435,7 @@
   }
   function toggleTheme() {
     var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', t);
-    try { localStorage.setItem('io-theme', t); } catch (e) {}
+    root.setAttribute('data-theme', t);     /* for this visit only, the next visit starts in the day view again */
     showTheme();
   }
   function togglePlain() {
