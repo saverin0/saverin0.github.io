@@ -28,7 +28,17 @@
   .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
   .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding: 14px 0 8px; flex-wrap: wrap; }
   h1 { font: 700 2rem/1.1 var(--head); margin: 0 0 2px; }
-  .tagline { margin: 0; color: var(--soft); }
+  .intro { max-width: 46rem; padding: 0 0 10px; }
+  .intro p { margin: 0 0 8px; }
+  .intro p:first-child { font-size: 1.12rem; }
+  .proj .lede { font-size: 1.05rem; margin: 0 0 8px; }
+  .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px; padding: 0; }
+  .tags li { font: 700 .86rem/1 var(--head); color: #1b2028; background: #9fd3ee; padding: 7px 10px; }
+  .tags li:nth-child(6n+2) { background: #a8d48a; }
+  .tags li:nth-child(6n+3) { background: #ecd070; }
+  .tags li:nth-child(6n+4) { background: #f0a08f; }
+  .tags li:nth-child(6n+5) { background: #a9c0ea; }
+  .tags li:nth-child(6n+6) { background: #d9dee4; }
   .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   button { font: 700 .88rem/1 var(--head); color: var(--ink); background: var(--card); border: 2px solid var(--ink); padding: 8px 12px; cursor: pointer; border-radius: 0; box-shadow: 3px 3px 0 var(--ink); }
   button:hover { background: var(--sign); color: #1b2028; }
@@ -105,7 +115,6 @@
 <header class="top">
   <div>
     <h1>Abhishek Singh</h1>
-    <p class="tagline">Machine learning for Earth observation and remote sensing. Berlin, Germany.</p>
   </div>
   <div class="tools">
     <button type="button" id="btn-plain">Plain list</button>
@@ -116,6 +125,18 @@
 </header>
 
 <main>
+<div class="intro">
+  <p>I am Abhishek Singh, an Earth observation and machine learning engineer in Berlin.</p>
+  <p>I work on how pictures of the Earth, taken from satellites, planes and drones, can help solve
+  problems in many fields of science. I want this data to make the world better and healthier, at a
+  time when AI moves fast and people's lives are changing.</p>
+  <p>I love reading research papers and building their methods, to find patterns in the data that are
+  hard to see. I use a mix of new and conventional tools for this, including AI agents.</p>
+  <p>One question I keep working on is how labels and models fit together. I make labels, the answers
+  a model learns from, with statistics, physics and mapping methods.</p>
+  <p>Below are some of my projects, my skills, my work experience and my education.</p>
+</div>
+
 <nav class="posts" aria-label="On this page">
   <p class="lead">Nine projects, nine signposts. Scroll, and the satellite flies over each one.</p>
   <ol>
@@ -132,7 +153,7 @@
   <ul class="more">
     <li><a href="#thesis">Master's thesis</a></li>
     <li><a href="#work">How I work</a></li>
-    <li><a href="#cv">Experience, education, tools</a></li>
+    <li><a href="#cv">Skills, open source, experience, education</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -142,6 +163,7 @@
 
   <article class="proj" id="p1"><div class="card"><p class="no"><span class="gcp"></span>Signpost 1</p>
     <h3><a href="https://github.com/saverin0/sar-transfer-glaciers">Do optical foundation models transfer to SAR?</a></h3>
+    <p class="lede">A model that learned from ordinary photos can find where a glacier ends in satellite radar pictures. A small add-on does as well as a much bigger model trained from scratch.</p>
     <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders (satellite-pretrained
     DINOv3, photo-pretrained DINOv3 and C-RADIOv4-H, and two SAR-pretrained encoders). Only small probes
     and heads are trained on top. A U-Net trained from scratch is the reference.</p>
@@ -164,6 +186,7 @@
   </div></article>
   <article class="proj" id="p2"><div class="card"><p class="no"><span class="gcp"></span>Signpost 2</p>
     <h3><a href="https://github.com/saverin0/sar-transfer-domains">Do frozen encoders transfer to radar images outside glaciers?</a></h3>
+    <p class="lede">The same idea on four other radar tasks, lakes, snow, forest types and mountain glaciers. Here the model that learned from satellite pictures came out ahead every time.</p>
     <p>Part two of the SAR study. The same frozen pipeline, with nothing tuned per dataset, on four
     Sentinel-1 datasets, glacial lakes, snow, forest types and alpine glaciers. The satellite-pretrained
     DINOv3 and C-RADIOv4-H stay frozen; only a linear probe and a small decoder are trained.</p>
@@ -187,6 +210,7 @@
   </div></article>
   <article class="proj" id="p3"><div class="card"><p class="no"><span class="gcp"></span>Signpost 3</p>
     <h3><a href="https://github.com/saverin0/sar-transfer-distillation">Can a radar student learn from frozen teachers?</a></h3>
+    <p class="lede">Can a small model learn to read radar pictures by copying several large models at once? It got close but did not reach the best large one. A teacher that reads radar itself helped.</p>
     <p>Part four of the SAR study. A C-RADIO-style ViT-B student is distilled from four frozen
     teachers, SigLIP2, satellite DINOv3, PE-Spatial and TerraFM-B reading Sentinel-1, then scored with
     frozen features on the four radar datasets of part two. Every rule was fixed before a score was seen.</p>
@@ -210,6 +234,7 @@
   </div></article>
   <article class="proj" id="p4"><div class="card"><p class="no"><span class="gcp"></span>Signpost 4</p>
     <h3><a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Where VGGT-&Omega; fails on real driving data</a></h3>
+    <p class="lede">A test of a model that builds 3D scenes from camera pictures, on real driving data it had never seen. It goes wrong mostly on moving cars, people and thin objects, and in rain at night.</p>
     <p>A stratified failure analysis of the released VGGT-&Omega; 3D reconstruction checkpoint on
     FZI-AURA, a dataset published after the model and therefore outside its training data. Error is
     broken down by weather, lighting and object motion instead of averaged, with predictions written
@@ -234,6 +259,7 @@
   </div></article>
   <article class="proj" id="p5"><div class="card"><p class="no"><span class="gcp"></span>Signpost 5</p>
     <h3><a href="https://github.com/saverin0/vggt-omega-drone-lidar">Can VGGT-&Omega; replace photogrammetry on drone images?</a></h3>
+    <p class="lede">Can that 3D model replace the slow classic way of making 3D maps from drone pictures? It is far faster but less exact. A mix of both beats the model alone in a fraction of the classic method's time.</p>
     <p>The released VGGT-&Omega; checkpoint on straight-down drone images from two UAVScenes flights,
     80 to 130&nbsp;m up, scored against the drone's own LiDAR and solved poses, against a flat plane
     fitted to the LiDAR itself, and against COLMAP, with a hybrid of the two. The success bars were
@@ -256,6 +282,7 @@
   </div></article>
   <article class="proj" id="p6"><div class="card"><p class="no"><span class="gcp"></span>Signpost 6</p>
     <h3><a href="https://github.com/saverin0/uav-lidar-vs-satellite">Drone LiDAR against satellite products</a></h3>
+    <p class="lede">How good are free satellite maps of height and land cover? I built a detailed map from a drone's laser scanner and checked the satellite products against it.</p>
     <p>Raw drone sensor logs of two MARS-LVIG flights in Armenia, a river valley and a small town,
     turned into DSM, DTM, nDSM and land cover at 0.5&nbsp;m with our own ROS&nbsp;2 readers, gyro-aided
     poses and a ground filter written in numpy, then compared with Copernicus GLO-30, ESA WorldCover,
@@ -281,6 +308,7 @@
   </div></article>
   <article class="proj" id="p7"><div class="card"><p class="no"><span class="gcp"></span>Signpost 7</p>
     <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
+    <p class="lede">Finding new buildings by comparing two satellite pictures of the same place from different times. A very small add-on on a ready-made model was enough.</p>
     <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
     monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
     <ul class="stats">
@@ -301,6 +329,7 @@
   </div></article>
   <article class="proj" id="p8"><div class="card"><p class="no"><span class="gcp"></span>Signpost 8</p>
     <h3><a href="https://github.com/saverin0/owl-caribou-overhead">Overhead caribou detectors across herds and years</a></h3>
+    <p class="lede">Finding caribou in pictures taken from a plane. I tested four ready-made animal detectors on a new herd and a new year, and looked at where they miss animals.</p>
     <p>Cross-herd, cross-year evaluation of four overhead detection models (one caribou-specific) on
     aerial survey imagery of the Central Arctic Herd, Alaska, 2022, after development on the Porcupine
     Herd, 2017. Error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
@@ -325,6 +354,7 @@
   </div></article>
   <article class="proj" id="p9"><div class="card"><p class="no"><span class="gcp"></span>Signpost 9</p>
     <h3><a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2">Winter wheat vegetation indices for Bavaria</a></h3>
+    <p class="lede">How green the winter wheat is in every district of Bavaria, month by month from March to June, 2017 to 2024, from satellite pictures.</p>
     <p>Monthly NDVI and NIRv for winter wheat across every district of Bavaria, from Sentinel-2
     composites masked with yearly 10 m crop type maps and aggregated with exact partial-pixel zonal
     statistics. The Sentinel-2 half of a two-person MSc capstone.</p>
@@ -349,26 +379,31 @@
 <section class="sheet" aria-label="About">
   <article class="proj" id="thesis"><div class="card">
   <h2>Master's thesis</h2>
-  <p>Carried out at the <b>DLR Earth Observation Center</b>, Oberpfaffenhofen, on the detection of
-  greenhouses and plastic-covered parcels in southern Germany from 20 cm aerial orthophotos, with
-  no hand-drawn annotation anywhere in training. Labels were derived from EU parcel-level crop
-  declarations and refined against the imagery. The detector combines a frozen satellite-pretrained
-  DINOv3 backbone, decoded back to 20 cm by guided feature upsampling, with a trainable ResNet-34
-  branch and a small fusion head. Supervised by Dr Ursula Gessner (DLR) and Prof Dr Iftikhar Ahmed
-  (University of Europe for Applied Sciences). A paper is in preparation.</p>
+  <p>My thesis at the <b>DLR Earth Observation Center</b> in Oberpfaffenhofen was about finding
+  greenhouses and fields covered with plastic in southern Germany, in air photos where one pixel is
+  20 cm. Nobody drew labels by hand for the training. The labels came from the crop reports that
+  farmers file with the EU for each field, checked against the photos.</p>
   </div></article>
 
   <article class="proj" id="work"><div class="card">
   <h2>How I work</h2>
-  <p>Most of my projects derive training labels from registers or benchmarks that were never made
-  for the purpose, then deal with the biases those labels carry. A result that has come back in every
-  project so far is that, past a small model budget, improving the data moves accuracy further than adding
-  model capacity does, and I measure both sides rather than assume it. Pipelines are numbered stages
-  with pinned environments so someone else can rerun them, and evaluation is on sites and conditions
-  held out from training, not on random splits.</p>
+  <p>Most of my projects take their labels from registers or test sets that were made for something
+  else, and then deal with the mistakes those labels carry. One thing has come back in every project
+  so far. Once a model is big enough, better data helps more than a bigger model, and I measure both
+  instead of guessing. My work runs in numbered steps with fixed software versions, so someone else
+  can run it again. I test on places and conditions the model has never seen.</p>
   </div></article>
 
   <article class="proj" id="cv"><div class="card">
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Python</li><li>PyTorch</li><li>C++17</li><li>SQL</li><li>GDAL</li><li>rasterio</li><li>geopandas</li><li>xarray</li>
+    <li>QGIS</li><li>Google Earth Engine</li><li>STAC</li><li>Linux</li><li>Git</li><li>Docker</li><li>SLURM</li>
+  </ul>
+  <h2>Open source</h2>
+  <p><a href="https://github.com/NVIDIA/nvImageCodec/issues/63">NVIDIA/nvImageCodec #63</a>, bug report.
+  NVIDIA's graphics-card decoder refused about 3 of 4 valid public aerial photos. NVIDIA confirmed the
+  bug and named the cause. I checked that cause against 2,357 files, with no exceptions.</p>
 <!--CV:start-->
   <h2>Experience</h2>
   <ul class="plain">
@@ -383,10 +418,6 @@
     <li><b>B.Eng. Electronics and Communication Engineering</b>, Jaypee Institute of Information
     Technology, India, 2016&ndash;2020.</li>
   </ul>
-  <h2>Tools</h2>
-  <p>Python, PyTorch, C++17 (CMake, pybind11), SQL. GDAL, rasterio, geopandas, xarray, QGIS, Google
-  Earth Engine, STAC. Linux, Git, Docker, pinned environments. GPU training on A100 and HPC on LRZ
-  terrabyte (SLURM).</p>
 <!--CV:end-->
   </div></article>
 
@@ -693,7 +724,7 @@
     for (i = py + 8; i < G; i += 3) R(px, i, 1, 2, 'beam');
     c.fillStyle = pal.beam; c.fillRect(px - 5, G - 1, 11, 2);
     S(SAT, SATM, px - 9, py);
-    if (u > NZ - 1.6) dots(px, py + 6, Math.round((NZ - 1) * ZW + 96 - cam), G - 11, 'orange');   /* the pass ends, data goes down to the station */
+    if (u >= NZ - 1) dots(px, py + 6, Math.round((NZ - 1) * ZW + 96 - cam), G - 11, 'orange');   /* the pass ends, data goes down to the station */
   }
   function requestDraw() {
     if (queued || fpsOn) return;
