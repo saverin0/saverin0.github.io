@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhishek Singh</title>
+<meta name="description" content="Machine learning for Earth observation and remote sensing. MSc Data Science, master's thesis at the DLR Earth Observation Center. Berlin, Germany.">
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('io-theme'); } catch (e) {}
+  if (t !== 'dark' && t !== 'light') {
+    t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+  :root {
+    --bg: #edf2f6; --card: #ffffff; --ink: #1b2028; --soft: #566070; --rule: #c4ced8; --link: #2458a6; --sign: #e8742a;
+    --head: "Trebuchet MS", "Lucida Grande", "Segoe UI", sans-serif;
+    --body: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  [data-theme="dark"] { --bg: #0e131a; --card: #161d27; --ink: #e6eaee; --soft: #9aa5b3; --rule: #2b3543; --link: #8fb8ee; --sign: #f59a4a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+  a { color: var(--link); text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--sign); outline-offset: 2px; }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--card); padding: 8px 12px; z-index: 30; }
+  .skip:focus { left: 8px; top: 8px; }
+
+  .stage { position: sticky; top: 0; z-index: 5; background: #000; border-bottom: 3px solid var(--ink); overflow: hidden; line-height: 0; }
+  .stage canvas { display: block; image-rendering: crisp-edges; image-rendering: pixelated; }
+  .over { position: absolute; left: 0; bottom: 0; margin: 0; padding: 3px 10px 4px; background: var(--ink); color: var(--bg); font: 700 .82rem/1.3 var(--head); letter-spacing: .02em; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding: 14px 0 8px; flex-wrap: wrap; }
+  h1 { font: 700 2rem/1.1 var(--head); margin: 0 0 2px; }
+  .tagline { margin: 0; color: var(--soft); }
+  .tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  button { font: 700 .88rem/1 var(--head); color: var(--ink); background: var(--card); border: 2px solid var(--ink); padding: 8px 12px; cursor: pointer; border-radius: 0; box-shadow: 3px 3px 0 var(--ink); }
+  button:hover { background: var(--sign); color: #1b2028; }
+  button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .hint { color: var(--soft); font-size: .86rem; }
+
+  .posts { padding: 4px 0 6px; }
+  .lead { margin: 0 0 6px; font-size: .95rem; }
+  .posts ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 26px; }
+  .posts ol li { display: flex; border-bottom: 1px solid var(--rule); }
+  .posts ol a { flex: 1; display: grid; grid-template-columns: 18px 1.1em 1fr; gap: 8px; align-items: center; padding: 4px 0; color: var(--ink); text-decoration: none; font-size: .92rem; line-height: 1.3; }
+  .gcp { display: inline-block; width: 16px; height: 16px; border: 1.5px solid var(--ink); background: conic-gradient(#1b2028 25%, #fff 0 50%, #1b2028 0 75%, #fff 0); }
+  .posts .n { font: 700 .9rem/1 var(--head); }
+  .posts a:hover .t { text-decoration: underline; }
+  .posts a[aria-current="true"] .gcp { background: var(--sign); }
+  .posts a[aria-current="true"] .t { font-weight: 600; }
+  .more { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 8px 0 0; padding: 0; font-size: .9rem; }
+  .more a[aria-current="true"] { font-weight: 600; }
+
+  .sheet { padding: 20px 0 10px; }
+  .sheet > h2 { font: 700 1.05rem/1.2 var(--head); margin: 0 0 12px; color: var(--soft); }
+  .proj { margin: 0 0 26px; }
+  .card { background: var(--card); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 16px 18px 18px; }
+  .card .no { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 700 .86rem/1 var(--head); color: var(--soft); }
+  .card h2 { font: 700 1.3rem/1.25 var(--head); margin: 0 0 8px; }
+  .card h2 + ul, .card p + h2, .card ul + h2 { margin-top: 0; }
+  .card ul + h2, .card p + h2 { margin-top: 18px; }
+  .proj h3 { font: 700 1.3rem/1.25 var(--head); margin: 0 0 8px; }
+  .proj h3 a { color: var(--ink); }
+  .proj p { margin: 0 0 10px; }
+  .card > p:last-child { margin-bottom: 0; }
+  .stats { list-style: none; margin: 10px 0 0; padding: 0; }
+  .stats li { padding: 5px 0 5px 12px; border-left: 3px solid var(--sign); font-size: .95rem; margin-bottom: 3px; }
+  .stats b { font-variant-numeric: tabular-nums; }
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li { margin: 0 0 8px; }
+  figure { margin: 16px 0 0; }
+  figure img { display: block; width: 100%; height: auto; border: 2px solid var(--ink); background: #fff; }
+  figcaption { color: var(--soft); font-size: .85rem; margin-top: 8px; line-height: 1.5; }
+
+  footer { border-top: 3px solid var(--ink); padding: 14px 0 50px; color: var(--soft); font-size: .9rem; }
+  footer p { margin: 0 0 4px; }
+
+  #help { position: fixed; right: 16px; bottom: 16px; z-index: 20; width: min(330px, calc(100vw - 32px)); background: var(--card); color: var(--ink); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 12px 14px; }
+  #help h2 { font: 700 1rem/1.2 var(--head); margin: 0 0 6px; }
+  #help table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  #help td { padding: 3px 0; vertical-align: top; }
+  #help td:first-child { width: 86px; }
+  kbd { font: 700 .82rem/1 var(--head); border: 2px solid var(--ink); padding: 1px 6px; background: var(--card); }
+  #fps { position: fixed; left: 12px; bottom: 12px; z-index: 20; background: var(--ink); color: var(--bg); font: 700 .85rem/1 var(--head); padding: 7px 10px; }
+  [hidden] { display: none !important; }
+
+  [data-plain="1"] .stage { display: none; }
+  [data-plain="1"] .lead { display: none; }
+  [data-plain="1"] .wrap { max-width: 48rem; }
+  [data-plain="1"] .posts ol { grid-template-columns: 1fr; }
+
+  @media (max-width: 720px) {
+    .posts ol { grid-template-columns: 1fr; }
+    h1 { font-size: 1.6rem; }
+    .card { padding: 13px 13px 15px; box-shadow: 3px 3px 0 var(--ink); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#projects">Skip to the projects</a>
+
+<div class="stage" id="stage">
+  <canvas id="world" aria-hidden="true"></canvas>
+  <p class="over" id="over" aria-live="polite">Start, Berlin</p>
+</div>
+
+<div class="wrap">
+<header class="top">
+  <div>
+    <h1>Abhishek Singh</h1>
+    <p class="tagline">Machine learning for Earth observation and remote sensing. Berlin, Germany.</p>
+  </div>
+  <div class="tools">
+    <button type="button" id="btn-plain">Plain list</button>
+    <button type="button" id="btn-theme">Night pass</button>
+    <button type="button" id="btn-keys" aria-expanded="false" aria-controls="help">Keys</button>
+    <span class="hint">Keys work here, press h.</span>
+  </div>
+</header>
+
+<main>
+<nav class="posts" aria-label="On this page">
+  <p class="lead">Nine projects, nine signposts. Scroll, and the satellite flies over each one.</p>
+  <ol>
+    <li><a href="#p1"><span class="gcp"></span><span class="n">1</span><span class="t">Do optical foundation models transfer to SAR?</span></a></li>
+    <li><a href="#p2"><span class="gcp"></span><span class="n">2</span><span class="t">Do frozen encoders transfer to radar images outside glaciers?</span></a></li>
+    <li><a href="#p3"><span class="gcp"></span><span class="n">3</span><span class="t">Can a radar student learn from frozen teachers?</span></a></li>
+    <li><a href="#p4"><span class="gcp"></span><span class="n">4</span><span class="t">Where VGGT-&Omega; fails on real driving data</span></a></li>
+    <li><a href="#p5"><span class="gcp"></span><span class="n">5</span><span class="t">Can VGGT-&Omega; replace photogrammetry on drone images?</span></a></li>
+    <li><a href="#p6"><span class="gcp"></span><span class="n">6</span><span class="t">Drone LiDAR against satellite products</span></a></li>
+    <li><a href="#p7"><span class="gcp"></span><span class="n">7</span><span class="t">Change detection with frozen DINOv3 features</span></a></li>
+    <li><a href="#p8"><span class="gcp"></span><span class="n">8</span><span class="t">Overhead caribou detectors across herds and years</span></a></li>
+    <li><a href="#p9"><span class="gcp"></span><span class="n">9</span><span class="t">Winter wheat vegetation indices for Bavaria</span></a></li>
+  </ol>
+  <ul class="more">
+    <li><a href="#thesis">Master's thesis</a></li>
+    <li><a href="#work">How I work</a></li>
+    <li><a href="#cv">Experience, education, tools</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="sheet" id="projects" aria-label="Projects">
+  <h2>Projects</h2>
+
+  <article class="proj" id="p1"><div class="card"><p class="no"><span class="gcp"></span>Signpost 1</p>
+    <h3><a href="https://github.com/saverin0/sar-transfer-glaciers">Do optical foundation models transfer to SAR?</a></h3>
+    <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders (satellite-pretrained
+    DINOv3, photo-pretrained DINOv3 and C-RADIOv4-H, and two SAR-pretrained encoders). Only small probes
+    and heads are trained on top. A U-Net trained from scratch is the reference.</p>
+    <ul class="stats">
+      <li>A <b>0.57M</b>-parameter decoder on frozen C-RADIO features matches the <b>7.8M</b>-parameter U-Net on front error, <b>979 &plusmn; 31 m</b> vs <b>979 m</b> on the two test glaciers</li>
+      <li>Per glacier, Columbia <b>1,067</b> vs <b>1,080 m</b> and Mapple <b>464</b> vs <b>474 m</b>; the decoder misses <b>7&ndash;9</b> of 122 fronts per seed, the U-Net <b>3</b></li>
+      <li>Zones, 3-class patch mIoU on test, from a linear probe on frozen photo DINOv3 <b>0.610</b>, C-RADIO <b>0.602</b>, U-Net <b>0.594</b></li>
+      <li>Photo-pretrained encoders beat the two SAR-pretrained ones we tried by <b>0.22&ndash;0.25</b> mIoU; satellite pretraining gave no clear advantage over photo pretraining</li>
+      <li>Linear probes alone draw no front on <b>30&ndash;57%</b> of test images, so fronts need a learned head</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">
+        <img src="images/sar-columbia-front.gif" width="900" height="587" loading="lazy"
+             alt="Sentinel-1 SAR image of Columbia glacier with predicted zones coloured, the real calving front in red and the model's front in orange.">
+      </a>
+      <figcaption>Columbia glacier, Sentinel-1, 2020. The frames cycle through the dataset&rsquo;s labels and each
+      model&rsquo;s zones (rock, glacier, ocean); red is the real calving front, orange the model&rsquo;s. Data from CaFFe, Gourmelon et al. 2022, CC BY 4.0.
+      <a href="https://github.com/saverin0/sar-transfer-glaciers">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p2"><div class="card"><p class="no"><span class="gcp"></span>Signpost 2</p>
+    <h3><a href="https://github.com/saverin0/sar-transfer-domains">Do frozen encoders transfer to radar images outside glaciers?</a></h3>
+    <p>Part two of the SAR study. The same frozen pipeline, with nothing tuned per dataset, on four
+    Sentinel-1 datasets, glacial lakes, snow, forest types and alpine glaciers. The satellite-pretrained
+    DINOv3 and C-RADIOv4-H stay frozen; only a linear probe and a small decoder are trained.</p>
+    <ul class="stats">
+      <li>With the decoder, satellite DINOv3 is ahead of C-RADIO on every dataset and test split, most on snow with IoU <b>0.735</b> vs <b>0.602</b>, the reverse of the glacier study</li>
+      <li>In the one like-for-like published comparison, frozen features reach a snow F1 of <b>0.847</b> against <b>0.897</b> for a U-Net trained on the same two radar channels</li>
+      <li>Where the published models also use optical data, frozen radar-only features reach about <b>60&ndash;80%</b> of their scores</li>
+      <li>From one lake patch, <b>83%</b> of the 100 most similar test patches are lake for satellite DINOv3, against <b>37%</b> for C-RADIO</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-domains">
+        <img src="images/sar-domains-four.gif" width="640" height="682" loading="lazy"
+             alt="One Sentinel-1 test chip each from glacial lakes, snow, forest types and alpine glaciers, shown as radar, then the dataset's labels, then the frozen satellite DINOv3 output.">
+      </a>
+      <figcaption>One test chip from each of the four datasets, Sentinel-1. Radar, the dataset's labels, then the
+      satellite DINOv3's output; each chip was picked because its score is close to the test-set score. Data from
+      Glacial-Lake-Bench (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0)
+      and the GlaViTU tile dataset (CC BY 4.0).
+      <a href="https://github.com/saverin0/sar-transfer-domains">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p3"><div class="card"><p class="no"><span class="gcp"></span>Signpost 3</p>
+    <h3><a href="https://github.com/saverin0/sar-transfer-distillation">Can a radar student learn from frozen teachers?</a></h3>
+    <p>Part four of the SAR study. A C-RADIO-style ViT-B student is distilled from four frozen
+    teachers, SigLIP2, satellite DINOv3, PE-Spatial and TerraFM-B reading Sentinel-1, then scored with
+    frozen features on the four radar datasets of part two. Every rule was fixed before a score was seen.</p>
+    <ul class="stats">
+      <li>The student does not reach the frozen satellite DINOv3, it is behind on all four datasets by <b>0.030</b> to <b>0.055</b></li>
+      <li>The radar-reading teacher helps, snow IoU <b>0.659</b> against <b>0.603</b> without it and alpine glaciers <b>0.508</b> against <b>0.477</b>, ties on lakes and forest</li>
+      <li>SigLIP2 NaFlex or FixRes as the first teacher makes no difference, <b>4</b> ties out of 4</li>
+      <li>Three further checks, a finer 8 px grid, radar coherence as an extra input and a compiled decoder step, change none of this</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/sar-transfer-distillation">
+        <img src="images/sar-distillation-features.gif" width="900" height="506" loading="lazy"
+             alt="Patch features of the frozen satellite DINOv3 and two distilled students shown as colours, next to the radar and the labels, one Sentinel-1 validation chip each from glacial lakes, snow, forest types and alpine glaciers.">
+      </a>
+      <figcaption>What each model sees, its patch features turned into colours with one PCA per image, next to
+      the radar and the labels, one validation chip per dataset, Sentinel-1. Data from Glacial-Lake-Bench
+      (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0) and the GlaViTU
+      tile dataset (CC BY 4.0).
+      <a href="https://github.com/saverin0/sar-transfer-distillation">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p4"><div class="card"><p class="no"><span class="gcp"></span>Signpost 4</p>
+    <h3><a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Where VGGT-&Omega; fails on real driving data</a></h3>
+    <p>A stratified failure analysis of the released VGGT-&Omega; 3D reconstruction checkpoint on
+    FZI-AURA, a dataset published after the model and therefore outside its training data. Error is
+    broken down by weather, lighting and object motion instead of averaged, with predictions written
+    down before the runs.</p>
+    <ul class="stats">
+      <li>Held-out test split, AbsRel <b>0.082</b>, &delta;&lt;1.25 = <b>94.3%</b>, across 107 unseen scenes</li>
+      <li>Moving objects <b>0.203</b> against parked <b>0.099</b> and background <b>0.077</b></li>
+      <li>Counting only object interiors, moving is still worse by <b>+0.062</b> in 70 of 76 scenes</li>
+      <li>Dry daylight <b>0.081</b>, wet night <b>0.159</b>, wet twilight <b>0.245</b></li>
+      <li><b>394</b> scenes analysed; the 20 scenes every rule was tuned on are excluded from all tables</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">
+        <img src="images/vggt-depth-typical-scene.gif" width="738" height="648" loading="lazy"
+             alt="All 40 frames of a test scene, each with the camera image, predicted depth, LiDAR ground truth and signed relative error at the LiDAR points.">
+      </a>
+      <figcaption>A typical test scene at the median depth error, all 40 frames. Top camera image and
+      predicted depth, bottom LiDAR ground truth and signed relative error &mdash; red is predicted too far, blue too
+      near, black rings mark moving objects. Data from FZI-AURA (CoCar NextGen), CC BY-SA 4.0.
+      <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p5"><div class="card"><p class="no"><span class="gcp"></span>Signpost 5</p>
+    <h3><a href="https://github.com/saverin0/vggt-omega-drone-lidar">Can VGGT-&Omega; replace photogrammetry on drone images?</a></h3>
+    <p>The released VGGT-&Omega; checkpoint on straight-down drone images from two UAVScenes flights,
+    80 to 130&nbsp;m up, scored against the drone's own LiDAR and solved poses, against a flat plane
+    fitted to the LiDAR itself, and against COLMAP, with a hybrid of the two. The success bars were
+    fixed before the runs.</p>
+    <ul class="stats">
+      <li>83 stretches of 40 images, depth AbsRel <b>0.0146</b> against <b>0.0310</b> for the plane in the town and <b>0.0173</b> against <b>0.0360</b> in the valley, at 2&nbsp;m between frames</li>
+      <li>COLMAP with the known camera is more accurate on all <b>6</b> test stretches, at 15 to 17 minutes per stretch against 5 to 8 seconds, <b>120 to 190</b> times longer</li>
+      <li>The hybrid beats the model alone on <b>6 of 6</b> in 6 to 13% of COLMAP's time, but comes within 10% of COLMAP on only <b>3 of 6</b>, short of the bar of 4</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/vggt-omega-drone-lidar">
+        <img src="images/vggt-drone-town-2m.gif" width="670" height="704" loading="lazy"
+             alt="A drone stretch over a town in 3D, circled once, its LiDAR points coloured by the depth error of VGGT-Omega alone, the hybrid and full COLMAP, and by the hybrid's change against the model.">
+      </a>
+      <figcaption>The town's 2&nbsp;m test stretch, a typical one, its LiDAR points coloured by each
+      estimate's depth error and by the hybrid against the model &mdash; teal where its error is lower,
+      brown where it is higher. Data from UAVScenes and MARS-LVIG (HKU MaRS lab), CC BY-NC-SA 4.0.
+      <a href="https://github.com/saverin0/vggt-omega-drone-lidar">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p6"><div class="card"><p class="no"><span class="gcp"></span>Signpost 6</p>
+    <h3><a href="https://github.com/saverin0/uav-lidar-vs-satellite">Drone LiDAR against satellite products</a></h3>
+    <p>Raw drone sensor logs of two MARS-LVIG flights in Armenia, a river valley and a small town,
+    turned into DSM, DTM, nDSM and land cover at 0.5&nbsp;m with our own ROS&nbsp;2 readers, gyro-aided
+    poses and a ground filter written in numpy, then compared with Copernicus GLO-30, ESA WorldCover,
+    a global canopy height map, Sentinel-2 and OpenStreetMap.</p>
+    <ul class="stats">
+      <li>GLO-30 against the drone DSM on bare ground, RMSE <b>0.80&nbsp;m</b> in the valley and <b>0.45&nbsp;m</b> in the town</li>
+      <li>Over buildings GLO-30 sits <b>0.74&nbsp;m</b> below the drone top surface (median of 72 posts), over trees <b>4.76&nbsp;m</b> and <b>2.31&nbsp;m</b> below</li>
+      <li>WorldCover agrees on <b>82%</b> of the valley and <b>32%</b> of the town, where it calls the gardens trees and grass; <b>78%</b> of the drone built-up pixels are built-up to WorldCover too</li>
+      <li>The canopy height map misses <b>85%</b> and <b>53%</b> of the drone vegetation 2&nbsp;m or taller</li>
+      <li><b>245</b> and <b>324</b> million points, overlapping flight lines agree to <b>0.04&nbsp;m</b> and <b>0.02&nbsp;m</b> RMS</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/uav-lidar-vs-satellite">
+        <img src="images/uav-lidar-valley.gif" width="900" height="600" loading="lazy"
+             alt="Eight frames of the valley flight on one map, the drone DSM, DTM and land cover at 0.5 m, then the Copernicus DEM, ESA WorldCover, the Meta and WRI canopy height map, Sentinel-2 and OpenStreetMap.">
+      </a>
+      <figcaption>The valley flight, the drone products and the five public layers they are checked
+      against, on the same map. Drone data from MARS-LVIG (HKU MaRS lab) and UAVScenes, CC BY-NC-SA 4.0,
+      with Copernicus GLO-30, ESA WorldCover, the Meta and WRI canopy height map (CC BY 4.0), Sentinel-2
+      and &copy; OpenStreetMap contributors (ODbL).
+      <a href="https://github.com/saverin0/uav-lidar-vs-satellite">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p7"><div class="card"><p class="no"><span class="gcp"></span>Signpost 7</p>
+    <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
+    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
+    monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
+    <ul class="stats">
+      <li>LEVIR-CD test F1 <b>0.910</b>, IoU <b>0.835</b> &mdash; difference head, <b>0.56M</b> parameters</li>
+      <li>Cross-attention head, <b>0.83M</b> parameters, F1 <b>0.908</b>. The smaller head was the one to keep</li>
+      <li>SpaceNet-7 monthly change F1 <b>0.178</b>, building IoU <b>0.704</b> &mdash; a far harder task</li>
+      <li>Training-free embedding baselines reach F1 <b>0.013&ndash;0.019</b>, so the training carries the result</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">
+        <img src="images/dinov3-levir.jpg" width="1300" height="658" loading="lazy"
+             alt="Two LEVIR-CD test pairs in four columns, the before image, the after image, the ground truth change mask, and the prediction coloured green for true positives, red for false positives and blue for missed change.">
+      </a>
+      <figcaption>Two LEVIR-CD test pairs. From left, before, after, ground truth change mask, and the
+      difference head&rsquo;s prediction &mdash; green is correct, red a false alarm, blue missed change.
+      <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">Notebook</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p8"><div class="card"><p class="no"><span class="gcp"></span>Signpost 8</p>
+    <h3><a href="https://github.com/saverin0/owl-caribou-overhead">Overhead caribou detectors across herds and years</a></h3>
+    <p>Cross-herd, cross-year evaluation of four overhead detection models (one caribou-specific) on
+    aerial survey imagery of the Central Arctic Herd, Alaska, 2022, after development on the Porcupine
+    Herd, 2017. Error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
+    <ul class="stats">
+      <li>Locked test domain of <b>2,607</b> patches from 43 mosaics, <b>12,456</b> annotated animals</li>
+      <li>The two best models tie threshold-free, with average precision <b>0.978</b> vs <b>0.977</b>, paired difference <b>+0.001</b> [&minus;0.004, +0.008] over 2,000 resamples</li>
+      <li>The gap at the fixed setting is an operating-point effect; one model holds F1 above <b>0.95</b> for any relative cut from 0.15 to 0.55, the other only from 0.35 to 0.60</li>
+      <li>A 16 px border band is <b>12%</b> of the area but holds <b>53%</b> of the errors; at full resolution most are real caribou the patch&rsquo;s ground truth does not list</li>
+      <li>The two remaining models trail clearly, with average precision <b>0.927</b> and <b>0.919</b></li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/owl-caribou-overhead">
+        <img src="images/owl-missed-in-clear-view.jpg" width="1564" height="856" loading="lazy"
+             alt="Eight aerial survey patches where the best detector missed the most caribou in clear view. Found animals are green, misses orange circles, false alarms pink crosses, the dashed line is the border band.">
+      </a>
+      <figcaption>The eight patches where the best model missed the most animals in clear view. Found animals are
+      green, misses orange circles, false alarms pink crosses, the dashed line the 16 px border band. The misses
+      have no single cause, among them fully visible adults, two close animals covered by one detection, and points placed at
+      the wrong end of the body. Survey imagery from the Zenodo release, CC BY-NC-SA 4.0.
+      <a href="https://github.com/saverin0/owl-caribou-overhead">Repository</a>.</figcaption>
+    </figure>
+  </div></article>
+  <article class="proj" id="p9"><div class="card"><p class="no"><span class="gcp"></span>Signpost 9</p>
+    <h3><a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2">Winter wheat vegetation indices for Bavaria</a></h3>
+    <p>Monthly NDVI and NIRv for winter wheat across every district of Bavaria, from Sentinel-2
+    composites masked with yearly 10 m crop type maps and aggregated with exact partial-pixel zonal
+    statistics. The Sentinel-2 half of a two-person MSc capstone.</p>
+    <ul class="stats">
+      <li><b>96</b> NUTS-3 regions, March to June, <b>2017&ndash;2024</b></li>
+      <li><b>1.13 TB</b> of input imagery, 4,768 GeoTIFFs across 29 MGRS tiles per month</li>
+      <li><b>1.64 billion</b> winter wheat pixels at 10 m, processed in <b>5.5 h</b> on one A100</li>
+      <li>Over <b>151,793</b> OCO-2 footprints, solar-induced fluorescence tracks NIRv (<b>r = 0.54</b>) better than NDVI (<b>r = 0.42</b>)</li>
+    </ul>
+    <figure>
+      <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">
+        <img src="images/bavaria-ndvi.jpg" width="1400" height="659" loading="lazy"
+             alt="Line chart of winter wheat NDVI for March to June, one line per year from 2017 to 2024, peaking in May.">
+      </a>
+      <figcaption>Winter wheat NDVI across Bavaria, March to June, one line per year from 2017 to
+      2024, with error bars over the 96 districts. Every year peaks in May.
+      <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">Notebook</a>.</figcaption>
+    </figure>
+  </div></article>
+</section>
+
+<section class="sheet" aria-label="About">
+  <article class="proj" id="thesis"><div class="card">
+  <h2>Master's thesis</h2>
+  <p>Carried out at the <b>DLR Earth Observation Center</b>, Oberpfaffenhofen, on the detection of
+  greenhouses and plastic-covered parcels in southern Germany from 20 cm aerial orthophotos, with
+  no hand-drawn annotation anywhere in training. Labels were derived from EU parcel-level crop
+  declarations and refined against the imagery. The detector combines a frozen satellite-pretrained
+  DINOv3 backbone, decoded back to 20 cm by guided feature upsampling, with a trainable ResNet-34
+  branch and a small fusion head. Supervised by Dr Ursula Gessner (DLR) and Prof Dr Iftikhar Ahmed
+  (University of Europe for Applied Sciences). A paper is in preparation.</p>
+  </div></article>
+
+  <article class="proj" id="work"><div class="card">
+  <h2>How I work</h2>
+  <p>Most of my projects derive training labels from registers or benchmarks that were never made
+  for the purpose, then deal with the biases those labels carry. A result that has come back in every
+  project so far is that, past a small model budget, improving the data moves accuracy further than adding
+  model capacity does, and I measure both sides rather than assume it. Pipelines are numbered stages
+  with pinned environments so someone else can rerun them, and evaluation is on sites and conditions
+  held out from training, not on random splits.</p>
+  </div></article>
+
+  <article class="proj" id="cv"><div class="card">
+<!--CV:start-->
+  <h2>Experience</h2>
+  <ul class="plain">
+    <li><b>Student Assistant, Robotics and Perception</b>, TU Berlin, 2025&ndash;2026. Onboard image capture and
+    control components in Python for REINCARNATE, a Horizon Europe consortium project.</li>
+    <li><b>Test Engineer</b>, Infosys, India, 2021&ndash;2024. Automated test pipelines in Java and JavaScript
+    with Selenium and TestNG, and data validation in SQL.</li>
+  </ul>
+  <h2>Education</h2>
+  <ul class="plain">
+    <li><b>M.Sc. Data Science</b>, University of Europe for Applied Sciences, Potsdam, 2024&ndash;2026.</li>
+    <li><b>B.Eng. Electronics and Communication Engineering</b>, Jaypee Institute of Information
+    Technology, India, 2016&ndash;2020.</li>
+  </ul>
+  <h2>Tools</h2>
+  <p>Python, PyTorch, C++17 (CMake, pybind11), SQL. GDAL, rasterio, geopandas, xarray, QGIS, Google
+  Earth Engine, STAC. Linux, Git, Docker, pinned environments. GPU training on A100 and HPC on LRZ
+  terrabyte (SLURM).</p>
+<!--CV:end-->
+  </div></article>
+
+  <article class="proj" id="contact"><div class="card">
+  <h2>Contact</h2>
+  <ul class="plain">
+    <li>GitHub &mdash; <a href="https://github.com/saverin0">saverin0</a></li>
+    <li>LinkedIn &mdash; <a href="https://www.linkedin.com/in/abhishekzsingh">abhishekzsingh</a></li>
+  </ul>
+  </div></article>
+</section>
+</main>
+
+<footer>
+  <p>Every number on this page is reported in the linked repository it belongs to.</p>
+  <p>The satellite has flown <span id="flown">0</span> pixels on this page. The pixel world is drawn in code, without picture files.</p>
+</footer>
+</div>
+
+<div id="help" role="dialog" aria-label="Keys" hidden>
+  <h2>Keys</h2>
+  <table>
+    <tr><td><kbd>1</kbd> to <kbd>9</kbd></td><td>fly to a signpost</td></tr>
+    <tr><td><kbd>p</kbd></td><td>plain list, and back</td></tr>
+    <tr><td><kbd>t</kbd></td><td>day pass or radar night pass</td></tr>
+    <tr><td><kbd>f</kbd></td><td>pictures per second</td></tr>
+    <tr><td><kbd>h</kbd></td><td>this list</td></tr>
+  </table>
+</div>
+<div id="fps" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- shell: theme, plain list, keys, help, speed readout ---------- */
+  var btnTheme = $('btn-theme'), btnPlain = $('btn-plain'), btnKeys = $('btn-keys'), help = $('help'), fpsBox = $('fps');
+  function showTheme() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btnTheme.textContent = dark ? 'Day pass' : 'Night pass';
+    btnTheme.setAttribute('aria-label', dark ? 'Switch to the light page, an optical day pass' : 'Switch to the dark page, a radar night pass');
+    pal = dark ? NIGHT : DAY; requestDraw();
+  }
+  function toggleTheme() {
+    var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', t);
+    try { localStorage.setItem('io-theme', t); } catch (e) {}
+    showTheme();
+  }
+  function togglePlain() {
+    var on = root.getAttribute('data-plain') !== '1';
+    root.setAttribute('data-plain', on ? '1' : '0');
+    btnPlain.textContent = on ? 'Back to the world' : 'Plain list';
+    if (!on) { resize(); readScroll(); }
+  }
+  function toggleHelp(force) {
+    var open = typeof force === 'boolean' ? force : help.hidden;
+    help.hidden = !open;
+    btnKeys.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function go(n) {
+    var el = $('p' + n);
+    if (!el) return;
+    var plain = root.getAttribute('data-plain') === '1', vh = window.innerHeight;
+    var free = plain ? 0 : stage.getBoundingClientRect().bottom;
+    var y = window.scrollY + el.getBoundingClientRect().top - (plain ? 10 : free + (vh - free) * 0.12);
+    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
+    var a = el.querySelector('h3 a');
+    if (a) a.focus({ preventScroll: true });
+  }
+  var fpsOn = false, fpsFrames = 0, fpsT0 = 0;
+  function fpsLoop(now) {
+    if (!fpsOn) return;
+    fpsFrames++;
+    if (now - fpsT0 >= 500) {
+      fpsBox.textContent = Math.round(fpsFrames * 1000 / (now - fpsT0)) + ' pictures per second';
+      fpsFrames = 0; fpsT0 = now;
+    }
+    draw();
+    requestAnimationFrame(fpsLoop);
+  }
+  function toggleFps() {
+    fpsOn = !fpsOn;
+    fpsBox.hidden = !fpsOn;
+    if (fpsOn) { fpsBox.textContent = 'measuring'; fpsFrames = 0; fpsT0 = performance.now(); requestAnimationFrame(fpsLoop); }
+  }
+  btnTheme.addEventListener('click', toggleTheme);
+  btnPlain.addEventListener('click', togglePlain);
+  btnKeys.addEventListener('click', function () { toggleHelp(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (k === 'Escape') { toggleHelp(false); return; }
+    if (k === 'h') toggleHelp();
+    else if (k === 'p') togglePlain();
+    else if (k === 't') toggleTheme();
+    else if (k === 'f') toggleFps();
+    else if (k >= '1' && k <= '9') go(+k);
+    else return;
+    e.preventDefault();
+  });
+
+  /* ---------- the pixel world, drawn by hand on one small 2D canvas ---------- */
+  var stage = $('stage'), cv = $('world'), c = cv.getContext('2d'), over = $('over'), flownBox = $('flown');
+  var SECTIONS = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'thesis', 'work', 'cv', 'contact'];
+  var LH = 72, G = 54, ZW = 240, NZ = SECTIONS.length + 1, WORLD = ZW * NZ, LW = 320, cam = 0, satX = 30, u = 0, flown = 0, lastSat = 30, queued = false;
+  var DAY = {
+    sky1: '#9fd3ee', sky2: '#c2e4f4', sky3: '#e2f2f8', sun: '#fff3b0', far: '#8eb0c5', mid: '#6f9aa0',
+    ice: '#eef8fc', iceSh: '#b3d8ea', sea: '#2d6590', foam: '#dff1f8', snow: '#fbfdff', lake: '#3f86b8', pine: '#2f6b4f', trunk: '#6a4a2c',
+    grass: '#74b24f', grassD: '#4f8f3c', field: '#e0b83e', fieldD: '#c49a2b', soil: '#96693d',
+    road: '#474c55', lane: '#e9e4d0', car1: '#d2452f', car2: '#2f6fb0', tyre: '#1b2028', glass: '#bfe0f0',
+    wall: '#efe2c9', wall2: '#d9c6a6', roof: '#bf4a35', win: '#3a5a78', steel: '#9aa4ad', dish: '#e3e8ec',
+    tundra: '#a7a25f', tundraD: '#86833f', bou: '#7a5a3c', antler: '#e2d6b8', river: '#3f86b8', bridge: '#8a6a4a',
+    ink: '#1b2028', white: '#ffffff', pole: '#6a4a2c', red: '#d2452f', orange: '#f08a24', green: '#2fa84f',
+    body: '#dfe4ea', panel: '#2b5fa8', gold: '#e0b83e', beam: 'rgba(255,255,255,.55)', dome: '#3c6f5a', gcp: '#1b2028'
+  };
+  /* the night pass paints the land the way radar sees it, water black, metal and walls bright */
+  var NIGHT = {
+    sky1: '#080c13', sky2: '#0b111b', sky3: '#0f1724', sun: '#dfe6ee', far: '#232a33', mid: '#2e363f',
+    ice: '#b9bfc5', iceSh: '#8f969d', sea: '#05070a', foam: '#59616a', snow: '#727980', lake: '#05070a', pine: '#60676e', trunk: '#4a5158',
+    grass: '#4e555c', grassD: '#434a51', field: '#7b8289', fieldD: '#6a7178', soil: '#3b4148',
+    road: '#14181c', lane: '#262b31', car1: '#f4f6f7', car2: '#f4f6f7', tyre: '#0e1114', glass: '#aab1b8',
+    wall: '#e6e9ec', wall2: '#c9ced3', roof: '#ffffff', win: '#9aa1a8', steel: '#f4f6f7', dish: '#f4f6f7',
+    tundra: '#4a5158', tundraD: '#3e454c', bou: '#8c939a', antler: '#b4bac0', river: '#05070a', bridge: '#f4f6f7',
+    ink: '#e6eaee', white: '#ffffff', pole: '#8c939a', red: '#ff6b57', orange: '#ffa94d', green: '#5fd67f',
+    body: '#dfe4ea', panel: '#3f6fb8', gold: '#e0b83e', beam: 'rgba(130,200,255,.5)', dome: '#d0d5da', gcp: '#0b0e12'
+  };
+  var pal = DAY;
+
+  function R(x, y, w, h, k) { c.fillStyle = pal[k]; c.fillRect(Math.round(x), Math.round(y), w, h); }
+  function S(rows, map, x, y) {
+    for (var j = 0; j < rows.length; j++) for (var i = 0; i < rows[j].length; i++) {
+      var k = map[rows[j].charAt(i)];
+      if (k) { c.fillStyle = pal[k]; c.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1); }
+    }
+  }
+  function box(x, y, w, h, k) { R(x, y, w, 1, k); R(x, y + h - 1, w, 1, k); R(x, y, 1, h, k); R(x + w - 1, y, 1, h, k); }
+  function dots(x0, y0, x1, y1, k) { var n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) / 3; for (var i = 1; i < n; i++) R(x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n, 1, 1, k); }
+
+  var FONT = {
+    A: ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'], B: ['####.', '#...#', '#...#', '####.', '#...#', '#...#', '####.'],
+    H: ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'], I: ['#####', '..#..', '..#..', '..#..', '..#..', '..#..', '#####'],
+    S: ['.####', '#....', '#....', '.###.', '....#', '....#', '####.'], E: ['#####', '#....', '#....', '####.', '#....', '#....', '#####'],
+    K: ['#...#', '#..#.', '#.#..', '##...', '#.#..', '#..#.', '#...#'], N: ['#...#', '##..#', '#.#.#', '#..##', '#...#', '#...#', '#...#'],
+    G: ['.####', '#....', '#....', '#.###', '#...#', '#...#', '.###.'],
+    1: ['..#..', '.##..', '..#..', '..#..', '..#..', '..#..', '.###.'], 2: ['.###.', '#...#', '....#', '...#.', '..#..', '.#...', '#####'],
+    3: ['####.', '....#', '....#', '.###.', '....#', '....#', '####.'], 4: ['...#.', '..##.', '.#.#.', '#..#.', '#####', '...#.', '...#.'],
+    5: ['#####', '#....', '####.', '....#', '....#', '#...#', '.###.'], 6: ['.###.', '#....', '#....', '####.', '#...#', '#...#', '.###.'],
+    7: ['#####', '....#', '...#.', '..#..', '..#..', '..#..', '..#..'], 8: ['.###.', '#...#', '#...#', '.###.', '#...#', '#...#', '.###.'],
+    9: ['.###.', '#...#', '#...#', '.####', '....#', '....#', '.###.']
+  };
+  function text(str, x, y, s, k) {
+    c.fillStyle = pal[k];
+    for (var n = 0; n < str.length; n++) {
+      var g = FONT[str.charAt(n)];
+      if (g) for (var j = 0; j < 7; j++) for (var i = 0; i < 5; i++) if (g[j].charAt(i) === '#') c.fillRect(Math.round(x) + (n * 6 + i) * s, y + j * s, s, s);
+    }
+  }
+
+  var SAT = ['.......GGGGG.......', 'PPPPPP-GBBBG-PPPPPP', 'PPPPPP-GBBBG-PPPPPP', 'PPPPPP-GBBBG-PPPPPP', '.......GGGGG.......', '........DDD........', '.........D.........'];
+  var SATM = { G: 'gold', P: 'panel', '-': 'steel', B: 'body', D: 'dish' };
+  var DRONE = ['SSSSS...SSSSS', '..I.......I..', '..IIBBBBBII..', '....BBKBB....', '.....I.I.....'], DRONEM = { S: 'steel', I: 'ink', B: 'orange', K: 'ink' };
+  var BOU = ['A.A........', '.AA........', '..CC.......', '..CCCCCCCC.', '...CCCCCCCC', '...CCCCCCC.', '...C.C.C.C.', '...C.C.C.C.'], BOUM = { A: 'antler', C: 'bou' };
+  var HOUSE = ['.....RR.....', '....RRRR....', '...RRRRRR...', '..RRRRRRRR..', '.RRRRRRRRRR.', '.WWWWWWWWWW.', '.WNNWWWWNNW.', '.WNNWWDDNNW.', '.WWWWWDDWWW.'];
+  var HOUSEM = { R: 'roof', W: 'wall', N: 'win', D: 'ink' };
+  var PINE = ['...S...', '..SGS..', '..GGG..', '.SGGGS.', '.GGGGG.', 'SGGGGGS', 'GGGGGGG', '...T...', '...T...'], PINEM = { S: 'snow', G: 'pine', T: 'trunk' };
+  var DISH = ['.........II..', '.......IIDI..', '.....IIDDDI..', '...IIDDDDDI..', '.IIDDDDDDI...', '..IIDDDDI....', '....IIII.....', '.....TT......', '....TTTT.....', '...TTTTTT....'], DISHM = { D: 'dish', I: 'ink', T: 'steel' };
+  var DISHS = ['....II.', '..IIDI.', 'IIDDDI.', '.IIII..', '..TT...'];
+  var CAR = ['..CCCCC...', '.CGGCGGC..', 'CCCCCCCCCC', 'CCCCCCCCCC', '.TT....TT.'];
+  var ROBOT = ['.....OO...', '....O.....', '...O......', '..SSSSSS..', '..SBBBBS..', '..SSSSSS..', '.TT....TT.'], ROBOTM = { O: 'orange', S: 'steel', B: 'body', T: 'tyre' };
+
+  function far(x) { return Math.round(11 + 6 * Math.sin(x * 0.045) + 4 * Math.sin(x * 0.11 + 1.7) + 2 * Math.sin(x * 0.31 + 0.4)); }
+  function mid(x) { return Math.round(5 + 3 * Math.sin(x * 0.07 + 2.1) + 2 * Math.sin(x * 0.19)); }
+
+  function post(x, n) {       /* a signpost, the black and white target that drone surveys put on the ground */
+    R(x + 4, G - 8, 1, 8, 'pole');
+    R(x, G - 17, 9, 9, 'gcp'); R(x + 1, G - 16, 7, 7, 'white'); R(x + 1, G - 16, 4, 4, 'gcp'); R(x + 5, G - 12, 3, 3, 'gcp');
+    if (n) text(String(n), x + 2, G - 27, 1, 'ink');
+  }
+
+  /* each scene is 240 wide, x is its left edge on screen, the signpost stands at x + 26 */
+  var ZONES = [
+    { name: 'Start, Berlin', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      text('ABHISHEK', x + 48, 5, 2, 'ink'); text('SINGH', x + 156, 5, 2, 'ink');
+      R(x + 229, G - 30, 1, 30, 'steel'); R(x + 227, G - 22, 5, 5, 'dish'); R(x + 228, G - 23, 3, 7, 'dish'); R(x + 229, G - 34, 1, 4, 'red');
+      R(x + 160, G - 12, 14, 12, 'wall2'); R(x + 176, G - 18, 12, 18, 'wall'); R(x + 190, G - 9, 16, 9, 'wall2');
+      for (var i = 0; i < 4; i++) R(x + 178 + (i % 2) * 5, G - 15 + (i >> 1) * 6, 2, 3, 'win');
+    } },
+    { name: 'a glacier front', ground: ['sea', 'sea'], draw: function (x) {
+      var i;
+      R(x + 96, G - 19, 144, 19, 'ice'); R(x + 96, G, 144, LH - G, 'iceSh');
+      for (i = 0; i < 144; i += 3) R(x + 96 + i, G - 19 - ((i * 7) % 4), 3, 3, 'ice');
+      R(x + 96, G - 19, 3, 19, 'iceSh'); for (i = 20; i < 140; i += 23) R(x + 96 + i, G - 15, 1, 9, 'iceSh');
+      R(x + 95, G - 21, 1, 21, 'red'); for (i = 0; i < 21; i += 3) R(x + 92, G - 21 + i, 1, 2, 'orange');
+      R(x + 40, G - 2, 7, 2, 'ice'); R(x + 42, G - 3, 3, 1, 'ice'); R(x + 66, G - 1, 4, 1, 'ice'); R(x + 20, G, 60, 1, 'foam');
+    } },
+    { name: 'lakes and snow', ground: ['snow', 'iceSh'], tufts: true, draw: function (x) {
+      R(x + 44, G, 34, 2, 'lake'); R(x + 152, G, 50, 3, 'lake');
+      S(PINE, PINEM, x + 84, G - 9); S(PINE, PINEM, x + 96, G - 9); S(PINE, PINEM, x + 116, G - 9); S(PINE, PINEM, x + 214, G - 9);
+    } },
+    { name: 'three teachers, one student', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      S(DISH, DISHM, x + 44, G - 10); S(DISH, DISHM, x + 92, G - 10); S(DISH, DISHM, x + 140, G - 10);
+      S(DISHS, DISHM, x + 204, G - 5);
+      dots(x + 50, G - 12, x + 207, G - 7, 'orange'); dots(x + 98, G - 12, x + 207, G - 7, 'orange'); dots(x + 146, G - 12, x + 207, G - 7, 'orange');
+    } },
+    { name: 'a road in traffic', ground: ['road', 'tyre'], draw: function (x) {
+      for (var i = 4; i < 240; i += 14) R(x + i, G + 7, 7, 1, 'lane');
+      S(CAR, { C: 'car1', G: 'glass', T: 'tyre' }, x + 70, G - 5); S(CAR, { C: 'car2', G: 'glass', T: 'tyre' }, x + 150, G - 5);
+      box(x + 147, G - 8, 16, 11, 'ink');
+      R(x + 118, G - 18, 1, 18, 'steel'); R(x + 116, G - 18, 5, 1, 'steel'); R(x + 200, G - 18, 1, 18, 'steel'); R(x + 198, G - 18, 5, 1, 'steel');
+    } },
+    { name: 'a town from above', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      S(HOUSE, HOUSEM, x + 50, G - 9); S(HOUSE, HOUSEM, x + 68, G - 9); S(HOUSE, HOUSEM, x + 104, G - 9); S(HOUSE, HOUSEM, x + 150, G - 9); S(HOUSE, HOUSEM, x + 186, G - 9);
+      S(DRONE, DRONEM, x + 120, 24); dots(x + 126, 29, x + 106, G - 9, 'white'); dots(x + 126, 29, x + 160, G - 9, 'white');
+    } },
+    { name: 'a river valley', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      var i;
+      R(x + 110, G, 30, LH - G, 'river'); R(x + 104, G - 2, 42, 2, 'bridge'); R(x + 108, G, 1, 4, 'bridge'); R(x + 141, G, 1, 4, 'bridge');
+      for (i = 0; i < 44; i += 4) R(x + 50 + i, G, 2, 2, 'field');
+      for (i = 0; i < 40; i += 4) R(x + 170 + i, G, 2, 2, 'grassD');
+      R(x + 60, G - 4, 5, 4, 'grassD'); R(x + 190, G - 5, 6, 5, 'grassD'); R(x + 192, G - 7, 2, 2, 'grassD');
+      S(DRONE, DRONEM, x + 82, 24);
+      for (i = -2; i <= 2; i++) dots(x + 88, 29, x + 88 + i * 16, G, 'red');
+    } },
+    { name: 'a growing city', ground: ['steel', 'road'], draw: function (x) {
+      var hs = [20, 28, 16, 24, 30, 18], i, j, bx = x + 44;
+      for (i = 0; i < 6; i++) {
+        R(bx, G - hs[i], 20, hs[i], i % 2 ? 'wall' : 'wall2');
+        for (j = 3; j < hs[i] - 3; j += 5) { R(bx + 3, G - hs[i] + j, 3, 2, 'win'); R(bx + 9, G - hs[i] + j, 3, 2, 'win'); R(bx + 15, G - hs[i] + j, 3, 2, 'win'); }
+        if (i === 4) box(bx - 1, G - hs[i] - 1, 22, hs[i] + 1, 'green');
+        bx += 24;
+      }
+      R(x + 196, G - 36, 1, 36, 'steel'); R(x + 176, G - 36, 30, 1, 'steel'); R(x + 180, G - 36, 1, 8, 'ink'); R(x + 179, G - 28, 3, 2, 'ink');
+    } },
+    { name: 'tundra with caribou', ground: ['tundra', 'tundraD'], tufts: true, draw: function (x) {
+      var xs = [50, 76, 104, 150, 176, 206], i;
+      for (i = 0; i < 240; i += 9) R(x + i + (i % 4), G - 1, 2, 1, 'tundraD');
+      for (i = 0; i < xs.length; i++) { S(BOU, BOUM, x + xs[i], G - 8); box(x + xs[i] - 1, G - 10, 13, 11, i === 3 ? 'orange' : 'green'); }
+    } },
+    { name: 'wheat fields', ground: ['field', 'soil'], tufts: true, draw: function (x) {
+      for (var i = 0; i < 150; i++) R(x + 40 + i, G - 4 - (i % 3), 1, 4 + (i % 3), i % 2 ? 'field' : 'fieldD');
+      R(x + 204, G - 22, 6, 22, 'wall'); R(x + 203, G - 26, 8, 4, 'dome'); R(x + 204, G - 28, 6, 2, 'dome'); R(x + 206, G - 31, 2, 3, 'dome'); R(x + 207, G - 34, 1, 3, 'ink');
+      R(x + 210, G - 10, 16, 10, 'wall'); R(x + 209, G - 13, 18, 3, 'roof'); R(x + 206, G - 16, 2, 3, 'win');
+    } },
+    { name: 'Thesis, greenhouses and plastic tunnels', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      var i, gx;
+      for (i = 0; i < 3; i++) {
+        gx = x + 46 + i * 26;
+        R(gx, G - 8, 22, 8, 'glass'); R(gx + 4, G - 10, 14, 2, 'glass'); R(gx + 8, G - 11, 6, 1, 'glass');
+        R(gx, G - 8, 1, 8, 'steel'); R(gx + 21, G - 8, 1, 8, 'steel'); R(gx + 7, G - 8, 1, 8, 'steel'); R(gx + 14, G - 8, 1, 8, 'steel');
+      }
+      for (i = 0; i < 5; i++) {
+        gx = x + 132 + i * 19;
+        R(gx + 1, G - 5, 14, 5, 'white'); R(gx + 3, G - 6, 10, 1, 'white'); R(gx + 2, G - 1, 12, 1, 'iceSh');
+      }
+    } },
+    { name: 'How I work, a pipeline in numbered stages', ground: ['steel', 'road'], draw: function (x) {
+      var i, bx;
+      for (i = 0; i < 4; i++) {
+        bx = x + 52 + i * 44;
+        R(bx, G - 14, 16, 14, 'wall2'); box(bx, G - 14, 16, 14, 'ink'); text(String(i + 1), bx + 6, G - 11, 1, 'ink');
+        if (i < 3) R(bx + 16, G - 8, 28, 2, 'steel');
+      }
+    } },
+    { name: 'Experience, a campus and a robot', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      R(x + 60, G - 18, 62, 18, 'wall'); R(x + 58, G - 21, 66, 3, 'wall2');
+      for (var i = 0; i < 6; i++) R(x + 65 + i * 10, G - 16, 3, 16, 'white');
+      R(x + 87, G - 8, 8, 8, 'gcp');
+      S(ROBOT, ROBOTM, x + 164, G - 7);
+    } },
+    { name: 'Contact, the ground station', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
+      S(DISH, DISHM, x + 91, G - 10); R(x + 114, G - 7, 14, 7, 'wall2'); R(x + 113, G - 9, 16, 2, 'roof'); R(x + 118, G - 4, 3, 4, 'gcp');
+    } }
+  ];
+
+  var noise = null;
+  function makeNoise() {      /* radar grain for the night pass, the same every time */
+    var n = document.createElement('canvas'), g = n.getContext('2d'), seed = 7, i, j, v;
+    n.width = 64; n.height = 64;
+    for (j = 0; j < 64; j++) for (i = 0; i < 64; i++) {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff; v = seed % 9;
+      if (v < 2) { g.fillStyle = 'rgba(255,255,255,.16)'; g.fillRect(i, j, 1, 1); }
+      else if (v < 4) { g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(i, j, 1, 1); }
+    }
+    return c.createPattern(n, 'repeat');
+  }
+
+  function draw() {
+    if (!LW || document.hidden || root.getAttribute('data-plain') === '1') return;
+    var sx, z, zx, i, h, zone;
+    R(0, 0, LW, 20, 'sky1'); R(0, 20, LW, 16, 'sky2'); R(0, 36, LW, G - 36, 'sky3');
+    R(LW - 30, 8, 6, 6, 'sun'); R(LW - 31, 9, 8, 4, 'sun'); R(LW - 29, 7, 4, 8, 'sun');
+    for (sx = 0; sx < LW; sx++) { h = far(sx + cam * 0.25); R(sx, G - h, 1, h, 'far'); }
+    for (sx = 0; sx < LW; sx++) { h = mid(sx + cam * 0.55); R(sx, G - h, 1, h, 'mid'); }
+    for (z = 0; z < NZ; z++) {
+      zx = z * ZW - Math.round(cam);
+      if (zx > LW || zx + ZW < 0) continue;
+      zone = ZONES[z];
+      R(zx, G, ZW, 2, zone.ground[0]); R(zx, G + 2, ZW, LH - G - 2, zone.ground[1]);
+      if (zone.tufts) for (i = 3; i < ZW; i += 11) R(zx + i, G + 5 + (i % 3) * 4, 2, 1, zone.ground[0]);
+      zone.draw(zx);
+      if (z >= 1) post(zx + 26, z <= 9 ? z : 0);
+    }
+    if (pal === NIGHT) {
+      if (!noise) noise = makeNoise();
+      /* grain on the land only, the sky stays clean. Measured in Chrome, this cut-out costs 0.14 ms per picture */
+      c.save(); c.beginPath(); c.moveTo(0, LH);
+      for (sx = 0; sx <= LW; sx++) c.lineTo(sx, G - Math.max(far(sx + cam * 0.25), mid(sx + cam * 0.55)));
+      c.lineTo(LW, LH); c.closePath(); c.clip();
+      c.translate(-(Math.round(cam) % 64), 0); c.fillStyle = noise; c.fillRect(0, 0, LW + 64, LH); c.restore();
+    }
+    /* the satellite and the strip of ground it is looking at */
+    var px = Math.round(satX - cam), py = 12 + Math.round(Math.sin(satX * 0.05) * 2);
+    for (i = py + 8; i < G; i += 3) R(px, i, 1, 2, 'beam');
+    c.fillStyle = pal.beam; c.fillRect(px - 5, G - 1, 11, 2);
+    S(SAT, SATM, px - 9, py);
+    if (u > NZ - 1.6) dots(px, py + 6, Math.round((NZ - 1) * ZW + 100 - cam), G - 11, 'orange');   /* the pass ends, data goes down to the station */
+  }
+  function requestDraw() {
+    if (queued || fpsOn) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; draw(); });
+  }
+
+  function resize() {
+    var w = stage.getBoundingClientRect().width;
+    if (!w) { LW = 0; return; }
+    var px = Math.max(1, Math.min(Math.floor(window.innerHeight * 0.38 / LH), Math.floor(w / 160)));
+    LW = Math.ceil(w / px);
+    cv.width = LW; cv.height = LH;
+    cv.style.width = LW * px + 'px'; cv.style.height = LH * px + 'px';
+    c.imageSmoothingEnabled = false;
+    noise = null;
+    place(); requestDraw();
+  }
+  function place() {
+    satX = 30 + u * ZW;
+    cam = Math.max(0, Math.min(WORLD - LW, satX - LW * 0.3));
+  }
+
+  var arts = SECTIONS.map($), links = document.querySelectorAll('.posts a'), shown = -1;
+  function readScroll() {
+    if (root.getAttribute('data-plain') === '1') return;
+    var vh = window.innerHeight, top = stage.getBoundingClientRect().bottom, line = top + (vh - top) * 0.4, k = 0, p = 0, i, r;
+    for (i = 0; i < arts.length; i++) {
+      r = arts[i].getBoundingClientRect();
+      if (r.top <= line) { k = i + 1; p = Math.min(1, Math.max(0, (line - r.top) / r.height)); }
+    }
+    if (k === 0) { var d = arts[0].getBoundingClientRect().top - line; p = Math.min(1, Math.max(0, window.scrollY / (window.scrollY + d || 1))); }
+    /* the last card is short and may never reach the reading line, so the last stretch of scrolling carries the satellite to the station */
+    var rest = document.documentElement.scrollHeight - window.scrollY - vh;
+    if (rest < 240) { var e = arts.length + 0.3 * (1 - Math.max(0, rest) / 240); if (e > k + p) { k = arts.length; p = e - k; } }
+    if (k === arts.length) p = Math.min(p, 0.999);
+    u = k + p; place();
+    flown += Math.abs(satX - lastSat); lastSat = satX;
+    flownBox.textContent = Math.round(flown).toLocaleString('en');
+    if (k !== shown) {
+      shown = k;
+      over.textContent = k >= 1 && k <= 9 ? 'Signpost ' + k + ' of 9, ' + ZONES[k].name : ZONES[k].name;
+      for (i = 0; i < links.length; i++) links[i].setAttribute('aria-current', i + 1 === k ? 'true' : 'false');
+    }
+    requestDraw();
+  }
+
+  showTheme(); resize(); readScroll();
+  window.addEventListener('scroll', readScroll, { passive: true });
+  window.addEventListener('resize', function () { resize(); readScroll(); });
+  window.addEventListener('load', readScroll);
+  document.addEventListener('visibilitychange', requestDraw);
+})();
+</script>
+</body>
+</html>
