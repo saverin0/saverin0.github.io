@@ -419,7 +419,7 @@
   <table>
     <tr><td><kbd>1</kbd> to <kbd>9</kbd></td><td>fly to a signpost</td></tr>
     <tr><td><kbd>p</kbd></td><td>plain list, and back</td></tr>
-    <tr><td><kbd>t</kbd></td><td>day pass or radar night pass</td></tr>
+    <tr><td><kbd>t</kbd></td><td>day pass or night pass</td></tr>
     <tr><td><kbd>f</kbd></td><td>pictures per second</td></tr>
     <tr><td><kbd>h</kbd></td><td>this list</td></tr>
   </table>
@@ -438,7 +438,7 @@
   function showTheme() {
     var dark = root.getAttribute('data-theme') === 'dark';
     btnTheme.textContent = dark ? 'Day pass' : 'Night pass';
-    btnTheme.setAttribute('aria-label', dark ? 'Switch to the light page, an optical day pass' : 'Switch to the dark page, a radar night pass');
+    btnTheme.setAttribute('aria-label', dark ? 'Switch to the light page, a day pass' : 'Switch to the dark page, a night pass');
     pal = dark ? NIGHT : DAY; requestDraw();
   }
   function toggleTheme() {
@@ -514,16 +514,16 @@
     ink: '#1b2028', white: '#ffffff', pole: '#6a4a2c', red: '#d2452f', orange: '#f08a24', green: '#2fa84f',
     body: '#dfe4ea', panel: '#2b5fa8', gold: '#e0b83e', beam: 'rgba(255,255,255,.55)', dome: '#3c6f5a', gcp: '#1b2028'
   };
-  /* the night pass paints the land the way radar sees it, water black, metal and walls bright */
+  /* the night pass is the same land at night, in colour, with a few stars and lit windows */
   var NIGHT = {
-    sky1: '#080c13', sky2: '#0b111b', sky3: '#0f1724', sun: '#dfe6ee', far: '#232a33', mid: '#2e363f',
-    ice: '#b9bfc5', iceSh: '#8f969d', sea: '#05070a', foam: '#59616a', snow: '#727980', lake: '#05070a', pine: '#60676e', trunk: '#4a5158',
-    grass: '#4e555c', grassD: '#434a51', field: '#7b8289', fieldD: '#6a7178', soil: '#3b4148',
-    road: '#14181c', lane: '#262b31', car1: '#f4f6f7', car2: '#f4f6f7', tyre: '#0e1114', glass: '#aab1b8',
-    wall: '#e6e9ec', wall2: '#c9ced3', roof: '#ffffff', win: '#9aa1a8', steel: '#f4f6f7', dish: '#f4f6f7',
-    tundra: '#4a5158', tundraD: '#3e454c', bou: '#8c939a', antler: '#b4bac0', river: '#05070a', bridge: '#f4f6f7',
-    ink: '#e6eaee', white: '#ffffff', pole: '#8c939a', red: '#ff6b57', orange: '#ffa94d', green: '#5fd67f',
-    body: '#dfe4ea', panel: '#3f6fb8', gold: '#e0b83e', beam: 'rgba(130,200,255,.5)', dome: '#d0d5da', gcp: '#0b0e12'
+    sky1: '#0a1430', sky2: '#11204a', sky3: '#1a2e5c', sun: '#e9eef6', far: '#1f3156', mid: '#18353f',
+    ice: '#a3bcd4', iceSh: '#7393b3', sea: '#0d2a4d', foam: '#6c8fb3', snow: '#bccbdd', lake: '#15406e', pine: '#18423a', trunk: '#3d2c1e',
+    grass: '#2f5c36', grassD: '#23482a', field: '#8d7631', fieldD: '#725e25', soil: '#4b3625',
+    road: '#262a31', lane: '#9a9482', car1: '#a83a2a', car2: '#285c96', tyre: '#0d1014', glass: '#6f97b3',
+    wall: '#8f8774', wall2: '#7a715f', roof: '#7d3226', win: '#ffd76a', steel: '#6b7480', dish: '#bcc5cf',
+    tundra: '#575531', tundraD: '#444321', bou: '#523d2a', antler: '#a3987c', river: '#15406e', bridge: '#523f2c',
+    ink: '#e6eaee', white: '#e3e8f0', pole: '#7a5c40', red: '#e5553f', orange: '#f59a3c', green: '#52c86e',
+    body: '#ccd3db', panel: '#3f6fb8', gold: '#e0b83e', beam: 'rgba(160,210,255,.45)', dome: '#2b5446', gcp: '#0b0e12', star: '#cdd7ea'
   };
   var pal = DAY;
 
@@ -564,8 +564,7 @@
   var HOUSE = ['.....RR.....', '....RRRR....', '...RRRRRR...', '..RRRRRRRR..', '.RRRRRRRRRR.', '.WWWWWWWWWW.', '.WNNWWWWNNW.', '.WNNWWDDNNW.', '.WWWWWDDWWW.'];
   var HOUSEM = { R: 'roof', W: 'wall', N: 'win', D: 'ink' };
   var PINE = ['...S...', '..SGS..', '..GGG..', '.SGGGS.', '.GGGGG.', 'SGGGGGS', 'GGGGGGG', '...T...', '...T...'], PINEM = { S: 'snow', G: 'pine', T: 'trunk' };
-  var DISH = ['.........II..', '.......IIDI..', '.....IIDDDI..', '...IIDDDDDI..', '.IIDDDDDDI...', '..IIDDDDI....', '....IIII.....', '.....TT......', '....TTTT.....', '...TTTTTT....'], DISHM = { D: 'dish', I: 'ink', T: 'steel' };
-  var DISHS = ['....II.', '..IIDI.', 'IIDDDI.', '.IIII..', '..TT...'];
+  var DISH = ['.....I.....', 'I....I....I', 'ID...I...DI', '.IDD.I.DDI.', '..IIDDDII..', '....III....', '.....T.....', '.....T.....', '....TTT....', '...TTTTT...'], DISHM = { D: 'dish', I: 'ink', T: 'steel' };
   var CAR = ['..CCCCC...', '.CGGCGGC..', 'CCCCCCCCCC', 'CCCCCCCCCC', '.TT....TT.'];
   var ROBOT = ['.....OO...', '....O.....', '...O......', '..SSSSSS..', '..SBBBBS..', '..SSSSSS..', '.TT....TT.'], ROBOTM = { O: 'orange', S: 'steel', B: 'body', T: 'tyre' };
 
@@ -576,6 +575,14 @@
     R(x + 4, G - 8, 1, 8, 'pole');
     R(x, G - 17, 9, 9, 'gcp'); R(x + 1, G - 16, 7, 7, 'white'); R(x + 1, G - 16, 4, 4, 'gcp'); R(x + 5, G - 12, 3, 3, 'gcp');
     if (n) text(String(n), x + 2, G - 27, 1, 'ink');
+  }
+
+  function mast(x, h) {       /* a radio mast, h tall, with a red tip */
+    R(x, G - h, 1, h, 'ink'); R(x - 1, G - Math.round(h * 0.55), 3, 1, 'ink'); R(x - 2, G - Math.round(h * 0.25), 5, 1, 'ink'); R(x - 3, G - 1, 7, 1, 'ink'); R(x, G - h - 2, 1, 2, 'red');
+  }
+  function waves(x, y, side) {      /* two small wave marks beside a mast top, side 1 is right, -1 is left */
+    R(x + 3 * side, y - 1, 1, 3, 'orange'); R(x + 2 * side, y - 2, 1, 1, 'orange'); R(x + 2 * side, y + 2, 1, 1, 'orange');
+    R(x + 6 * side, y - 2, 1, 5, 'orange'); R(x + 5 * side, y - 3, 1, 1, 'orange'); R(x + 5 * side, y + 3, 1, 1, 'orange'); R(x + 4 * side, y - 4, 1, 1, 'orange'); R(x + 4 * side, y + 4, 1, 1, 'orange');
   }
 
   /* each scene is 240 wide, x is its left edge on screen, the signpost stands at x + 26 */
@@ -599,9 +606,9 @@
       S(PINE, PINEM, x + 84, G - 9); S(PINE, PINEM, x + 96, G - 9); S(PINE, PINEM, x + 116, G - 9); S(PINE, PINEM, x + 214, G - 9);
     } },
     { name: 'three teachers, one student', ground: ['grass', 'soil'], tufts: true, draw: function (x) {
-      S(DISH, DISHM, x + 44, G - 10); S(DISH, DISHM, x + 92, G - 10); S(DISH, DISHM, x + 140, G - 10);
-      S(DISHS, DISHM, x + 204, G - 5);
-      dots(x + 50, G - 12, x + 207, G - 7, 'orange'); dots(x + 98, G - 12, x + 207, G - 7, 'orange'); dots(x + 146, G - 12, x + 207, G - 7, 'orange');
+      var xs = [62, 110, 158], i;
+      for (i = 0; i < 3; i++) { mast(x + xs[i], 24); waves(x + xs[i], G - 24, 1); }
+      mast(x + 208, 11); waves(x + 208, G - 11, -1);
     } },
     { name: 'a road in traffic', ground: ['road', 'tyre'], draw: function (x) {
       for (var i = 4; i < 240; i += 14) R(x + i, G + 7, 7, 1, 'lane');
@@ -673,23 +680,12 @@
     } }
   ];
 
-  var noise = null;
-  function makeNoise() {      /* radar grain for the night pass, the same every time */
-    var n = document.createElement('canvas'), g = n.getContext('2d'), seed = 7, i, j, v;
-    n.width = 64; n.height = 64;
-    for (j = 0; j < 64; j++) for (i = 0; i < 64; i++) {
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff; v = seed % 9;
-      if (v < 2) { g.fillStyle = 'rgba(255,255,255,.16)'; g.fillRect(i, j, 1, 1); }
-      else if (v < 4) { g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(i, j, 1, 1); }
-    }
-    return c.createPattern(n, 'repeat');
-  }
-
   function draw() {
     if (!LW || document.hidden || root.getAttribute('data-plain') === '1') return;
     var sx, z, zx, i, h, zone;
     R(0, 0, LW, 20, 'sky1'); R(0, 20, LW, 16, 'sky2'); R(0, 36, LW, G - 36, 'sky3');
     R(LW - 30, 8, 6, 6, 'sun'); R(LW - 31, 9, 8, 4, 'sun'); R(LW - 29, 7, 4, 8, 'sun');
+    if (pal === NIGHT) for (i = 0; i < 18; i++) R(((i * 97 + 13 - cam * 0.03) % LW + LW) % LW, 2 + (i * 37) % 30, 1, 1, 'star');   /* a few stars, very far away */
     for (sx = 0; sx < LW; sx++) { h = far(sx + cam * 0.25); R(sx, G - h, 1, h, 'far'); }
     for (sx = 0; sx < LW; sx++) { h = mid(sx + cam * 0.55); R(sx, G - h, 1, h, 'mid'); }
     for (z = 0; z < NZ; z++) {
@@ -701,20 +697,12 @@
       zone.draw(zx);
       if (z >= 1) post(zx + 26, z <= 9 ? z : 0);
     }
-    if (pal === NIGHT) {
-      if (!noise) noise = makeNoise();
-      /* grain on the land only, the sky stays clean. Measured in Chrome, this cut-out costs 0.14 ms per picture */
-      c.save(); c.beginPath(); c.moveTo(0, LH);
-      for (sx = 0; sx <= LW; sx++) c.lineTo(sx, G - Math.max(far(sx + cam * 0.25), mid(sx + cam * 0.55)));
-      c.lineTo(LW, LH); c.closePath(); c.clip();
-      c.translate(-(Math.round(cam) % 64), 0); c.fillStyle = noise; c.fillRect(0, 0, LW + 64, LH); c.restore();
-    }
     /* the satellite and the strip of ground it is looking at */
     var px = Math.round(satX - cam), py = 12 + Math.round(Math.sin(satX * 0.05) * 2);
     for (i = py + 8; i < G; i += 3) R(px, i, 1, 2, 'beam');
     c.fillStyle = pal.beam; c.fillRect(px - 5, G - 1, 11, 2);
     S(SAT, SATM, px - 9, py);
-    if (u > NZ - 1.6) dots(px, py + 6, Math.round((NZ - 1) * ZW + 100 - cam), G - 11, 'orange');   /* the pass ends, data goes down to the station */
+    if (u > NZ - 1.6) dots(px, py + 6, Math.round((NZ - 1) * ZW + 96 - cam), G - 11, 'orange');   /* the pass ends, data goes down to the station */
   }
   function requestDraw() {
     if (queued || fpsOn) return;
@@ -730,7 +718,6 @@
     cv.width = LW; cv.height = LH;
     cv.style.width = LW * px + 'px'; cv.style.height = LH * px + 'px';
     c.imageSmoothingEnabled = false;
-    noise = null;
     place(); requestDraw();
   }
   function place() {
