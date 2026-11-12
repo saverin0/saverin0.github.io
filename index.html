@@ -164,45 +164,45 @@
   <article class="proj" id="p1"><div class="card"><p class="no"><span class="gcp"></span>Signpost 1</p>
     <h3><a href="https://github.com/saverin0/sar-transfer-glaciers">Do optical foundation models transfer to SAR?</a></h3>
     <p class="lede">A model that learned from ordinary photos can find where a glacier ends in satellite radar pictures. A small add-on does as well as a much bigger model trained from scratch.</p>
-    <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders (satellite-pretrained
-    DINOv3, photo-pretrained DINOv3 and C-RADIOv4-H, and two SAR-pretrained encoders). Only small probes
-    and heads are trained on top. A U-Net trained from scratch is the reference.</p>
+    <p>Glacier calving-front delineation on the CaFFe benchmark with frozen encoders. They are
+    satellite-pretrained DINOv3, photo-pretrained DINOv3, C-RADIOv4-H and two SAR-pretrained encoders.
+    Only small probes and heads are trained on top. A U-Net trained from scratch is the reference.</p>
     <ul class="stats">
-      <li>A <b>0.57M</b>-parameter decoder on frozen C-RADIO features matches the <b>7.8M</b>-parameter U-Net on front error, <b>979 &plusmn; 31 m</b> vs <b>979 m</b> on the two test glaciers</li>
-      <li>Per glacier, Columbia <b>1,067</b> vs <b>1,080 m</b> and Mapple <b>464</b> vs <b>474 m</b>; the decoder misses <b>7&ndash;9</b> of 122 fronts per seed, the U-Net <b>3</b></li>
-      <li>Zones, 3-class patch mIoU on test, from a linear probe on frozen photo DINOv3 <b>0.610</b>, C-RADIO <b>0.602</b>, U-Net <b>0.594</b></li>
-      <li>Photo-pretrained encoders beat the two SAR-pretrained ones we tried by <b>0.22&ndash;0.25</b> mIoU; satellite pretraining gave no clear advantage over photo pretraining</li>
-      <li>Linear probes alone draw no front on <b>30&ndash;57%</b> of test images, so fronts need a learned head</li>
+      <li>A <b>0.57M</b>-parameter decoder on frozen C-RADIO features matches the <b>7.8M</b>-parameter U-Net on front error with <b>979 &plusmn; 31 m</b> vs <b>979 m</b> on the two test glaciers</li>
+      <li>Per glacier it is <b>1,067</b> vs <b>1,080 m</b> on Columbia and <b>464</b> vs <b>474 m</b> on Mapple. The decoder misses <b>7&ndash;9</b> of 122 fronts per seed and the U-Net <b>3</b></li>
+      <li>Zones as 3-class patch mIoU on test from a linear probe reach <b>0.610</b> on frozen photo DINOv3 and <b>0.602</b> on C-RADIO. The U-Net reaches <b>0.594</b></li>
+      <li>Photo-pretrained encoders beat the two SAR-pretrained ones we tried by <b>0.22&ndash;0.25</b> mIoU. Satellite pretraining gave no clear advantage over photo pretraining</li>
+      <li>Linear probes alone draw no front on <b>30&ndash;57%</b> of test images. Fronts need a learned head</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/sar-transfer-glaciers">
         <img src="images/sar-columbia-front.gif" width="900" height="587" loading="lazy"
              alt="Sentinel-1 SAR image of Columbia glacier with predicted zones coloured, the real calving front in red and the model's front in orange.">
       </a>
-      <figcaption>Columbia glacier, Sentinel-1, 2020. The frames cycle through the dataset&rsquo;s labels and each
-      model&rsquo;s zones (rock, glacier, ocean); red is the real calving front, orange the model&rsquo;s. Data from CaFFe, Gourmelon et al. 2022, CC BY 4.0.
+      <figcaption>Columbia glacier in Sentinel-1 images from 2020. The frames cycle through the dataset&rsquo;s labels and each
+      model&rsquo;s zones (rock, glacier, ocean). Red is the real calving front and orange the model&rsquo;s. Data from CaFFe (Gourmelon et al. 2022) under CC BY 4.0.
       <a href="https://github.com/saverin0/sar-transfer-glaciers">Repository</a>.</figcaption>
     </figure>
   </div></article>
   <article class="proj" id="p2"><div class="card"><p class="no"><span class="gcp"></span>Signpost 2</p>
     <h3><a href="https://github.com/saverin0/sar-transfer-domains">Do frozen encoders transfer to radar images outside glaciers?</a></h3>
     <p class="lede">The same idea on four other radar tasks. They are lakes, snow, forest types and mountain glaciers. Here the model that learned from satellite pictures came out ahead every time.</p>
-    <p>Part two of the SAR study. The same frozen pipeline, with nothing tuned per dataset, on four
-    Sentinel-1 datasets, glacial lakes, snow, forest types and alpine glaciers. The satellite-pretrained
-    DINOv3 and C-RADIOv4-H stay frozen; only a linear probe and a small decoder are trained.</p>
+    <p>Part two of the SAR study. The same frozen pipeline with nothing tuned per dataset runs on four
+    Sentinel-1 datasets. They are glacial lakes, snow, forest types and alpine glaciers. The
+    satellite-pretrained DINOv3 and C-RADIOv4-H stay frozen. Only a linear probe and a small decoder are trained.</p>
     <ul class="stats">
-      <li>With the decoder, satellite DINOv3 is ahead of C-RADIO on every dataset and test split, most on snow with IoU <b>0.735</b> vs <b>0.602</b>, the reverse of the glacier study</li>
-      <li>In the one like-for-like published comparison, frozen features reach a snow F1 of <b>0.847</b> against <b>0.897</b> for a U-Net trained on the same two radar channels</li>
-      <li>Where the published models also use optical data, frozen radar-only features reach about <b>60&ndash;80%</b> of their scores</li>
-      <li>From one lake patch, <b>83%</b> of the 100 most similar test patches are lake for satellite DINOv3, against <b>37%</b> for C-RADIO</li>
+      <li>With the decoder the satellite DINOv3 is ahead of C-RADIO on every dataset and test split. The gap is largest on snow with IoU <b>0.735</b> vs <b>0.602</b>. This is the reverse of the glacier study</li>
+      <li>In the one like-for-like published comparison frozen features reach a snow F1 of <b>0.847</b> against <b>0.897</b> for a U-Net trained on the same two radar channels</li>
+      <li>Frozen radar-only features reach about <b>60&ndash;80%</b> of the scores of published models that also use optical data</li>
+      <li>Starting from one lake patch <b>83%</b> of the 100 most similar test patches are lake for satellite DINOv3 against <b>37%</b> for C-RADIO</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/sar-transfer-domains">
         <img src="images/sar-domains-four.gif" width="640" height="682" loading="lazy"
              alt="One Sentinel-1 test chip each from glacial lakes, snow, forest types and alpine glaciers, shown as radar, then the dataset's labels, then the frozen satellite DINOv3 output.">
       </a>
-      <figcaption>One test chip from each of the four datasets, Sentinel-1. Radar, the dataset's labels, then the
-      satellite DINOv3's output; each chip was picked because its score is close to the test-set score. Data from
+      <figcaption>One Sentinel-1 test chip from each of the four datasets. The frames show the radar, the dataset's labels and then the
+      satellite DINOv3's output. Each chip was picked because its score is close to the test-set score. Data from
       Glacial-Lake-Bench (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0)
       and the GlaViTU tile dataset (CC BY 4.0).
       <a href="https://github.com/saverin0/sar-transfer-domains">Repository</a>.</figcaption>
@@ -212,21 +212,21 @@
     <h3><a href="https://github.com/saverin0/sar-transfer-distillation">Can a radar student learn from frozen teachers?</a></h3>
     <p class="lede">Can a small model learn to read radar pictures by copying several large models at once? It got close but did not reach the best large one. A teacher that reads radar itself helped.</p>
     <p>Part four of the SAR study. A C-RADIO-style ViT-B student is distilled from four frozen
-    teachers, SigLIP2, satellite DINOv3, PE-Spatial and TerraFM-B reading Sentinel-1, then scored with
-    frozen features on the four radar datasets of part two. Every rule was fixed before a score was seen.</p>
+    teachers. They are SigLIP2, satellite DINOv3, PE-Spatial and TerraFM-B reading Sentinel-1. The student is
+    then scored with frozen features on the four radar datasets of part two. Every rule was fixed before a score was seen.</p>
     <ul class="stats">
-      <li>The student does not reach the frozen satellite DINOv3, it is behind on all four datasets by <b>0.030</b> to <b>0.055</b></li>
-      <li>The radar-reading teacher helps, snow IoU <b>0.659</b> against <b>0.603</b> without it and alpine glaciers <b>0.508</b> against <b>0.477</b>, ties on lakes and forest</li>
-      <li>SigLIP2 NaFlex or FixRes as the first teacher makes no difference, <b>4</b> ties out of 4</li>
-      <li>Three further checks, a finer 8 px grid, radar coherence as an extra input and a compiled decoder step, change none of this</li>
+      <li>The student does not reach the frozen satellite DINOv3. It is behind on all four datasets by <b>0.030</b> to <b>0.055</b></li>
+      <li>The radar-reading teacher helps. Snow IoU is <b>0.659</b> against <b>0.603</b> without it and alpine glaciers <b>0.508</b> against <b>0.477</b>. Lakes and forest are ties</li>
+      <li>SigLIP2 NaFlex or FixRes as the first teacher makes no difference with <b>4</b> ties out of 4</li>
+      <li>Three further checks change none of this. They are a finer 8 px grid, radar coherence as an extra input and a compiled decoder step</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/sar-transfer-distillation">
         <img src="images/sar-distillation-features.gif" width="900" height="506" loading="lazy"
              alt="Patch features of the frozen satellite DINOv3 and two distilled students shown as colours, next to the radar and the labels, one Sentinel-1 validation chip each from glacial lakes, snow, forest types and alpine glaciers.">
       </a>
-      <figcaption>What each model sees, its patch features turned into colours with one PCA per image, next to
-      the radar and the labels, one validation chip per dataset, Sentinel-1. Data from Glacial-Lake-Bench
+      <figcaption>What each model sees. Its patch features are turned into colours with one PCA per image and shown next to
+      the radar and the labels. One Sentinel-1 validation chip per dataset. Data from Glacial-Lake-Bench
       (CC BY 4.0), SnowSAR replication data (Etalab Open Licence 2.0), ForTy v1 (CC BY-SA 4.0) and the GlaViTU
       tile dataset (CC BY 4.0).
       <a href="https://github.com/saverin0/sar-transfer-distillation">Repository</a>.</figcaption>
@@ -236,72 +236,72 @@
     <h3><a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Where VGGT-&Omega; fails on real driving data</a></h3>
     <p class="lede">A test of a model that builds 3D scenes from camera pictures. The test uses real driving data the model had never seen. It goes wrong mostly on moving cars, people and thin objects and in rain at night.</p>
     <p>A stratified failure analysis of the released VGGT-&Omega; 3D reconstruction checkpoint on
-    FZI-AURA, a dataset published after the model and therefore outside its training data. Error is
-    broken down by weather, lighting and object motion instead of averaged, with predictions written
+    FZI-AURA. This dataset was published after the model and is therefore outside its training data. Error is
+    broken down by weather, lighting and object motion instead of averaged. Predictions were written
     down before the runs.</p>
     <ul class="stats">
-      <li>Held-out test split, AbsRel <b>0.082</b>, &delta;&lt;1.25 = <b>94.3%</b>, across 107 unseen scenes</li>
+      <li>Held-out test split with AbsRel <b>0.082</b> and &delta;&lt;1.25 = <b>94.3%</b> across 107 unseen scenes</li>
       <li>Moving objects <b>0.203</b> against parked <b>0.099</b> and background <b>0.077</b></li>
-      <li>Counting only object interiors, moving is still worse by <b>+0.062</b> in 70 of 76 scenes</li>
-      <li>Dry daylight <b>0.081</b>, wet night <b>0.159</b>, wet twilight <b>0.245</b></li>
-      <li><b>394</b> scenes analysed; the 20 scenes every rule was tuned on are excluded from all tables</li>
+      <li>With only object interiors counted moving objects are still worse by <b>+0.062</b> in 70 of 76 scenes</li>
+      <li>Dry daylight <b>0.081</b>, wet night <b>0.159</b> and wet twilight <b>0.245</b></li>
+      <li><b>394</b> scenes analysed. The 20 scenes every rule was tuned on are excluded from all tables</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">
         <img src="images/vggt-depth-typical-scene.gif" width="738" height="648" loading="lazy"
              alt="All 40 frames of a test scene, each with the camera image, predicted depth, LiDAR ground truth and signed relative error at the LiDAR points.">
       </a>
-      <figcaption>A typical test scene at the median depth error, all 40 frames. Top camera image and
-      predicted depth, bottom LiDAR ground truth and signed relative error &mdash; red is predicted too far, blue too
-      near, black rings mark moving objects. Data from FZI-AURA (CoCar NextGen), CC BY-SA 4.0.
+      <figcaption>A typical test scene at the median depth error with all 40 frames. The top row shows the camera image and
+      the predicted depth. The bottom row shows the LiDAR ground truth and the signed relative error. Red is predicted too far and blue too
+      near. Black rings mark moving objects. Data from FZI-AURA (CoCar NextGen) under CC BY-SA 4.0.
       <a href="https://github.com/saverin0/vggt-omega-aura-benchmark">Repository</a>.</figcaption>
     </figure>
   </div></article>
   <article class="proj" id="p5"><div class="card"><p class="no"><span class="gcp"></span>Signpost 5</p>
     <h3><a href="https://github.com/saverin0/vggt-omega-drone-lidar">Can VGGT-&Omega; replace photogrammetry on drone images?</a></h3>
     <p class="lede">Can that 3D model replace the slow classic way of making 3D maps from drone pictures? It is far faster but less exact. A mix of both beats the model alone in a fraction of the classic method's time.</p>
-    <p>The released VGGT-&Omega; checkpoint on straight-down drone images from two UAVScenes flights,
-    80 to 130&nbsp;m up, scored against the drone's own LiDAR and solved poses, against a flat plane
-    fitted to the LiDAR itself, and against COLMAP, with a hybrid of the two. The success bars were
+    <p>The released VGGT-&Omega; checkpoint on straight-down drone images from two UAVScenes flights
+    80 to 130&nbsp;m up. It is scored against the drone's own LiDAR and solved poses. It is compared with a flat plane
+    fitted to the LiDAR itself and with COLMAP. A hybrid of the model and COLMAP is tested too. The success bars were
     fixed before the runs.</p>
     <ul class="stats">
-      <li>83 stretches of 40 images, depth AbsRel <b>0.0146</b> against <b>0.0310</b> for the plane in the town and <b>0.0173</b> against <b>0.0360</b> in the valley, at 2&nbsp;m between frames</li>
-      <li>COLMAP with the known camera is more accurate on all <b>6</b> test stretches, at 15 to 17 minutes per stretch against 5 to 8 seconds, <b>120 to 190</b> times longer</li>
-      <li>The hybrid beats the model alone on <b>6 of 6</b> in 6 to 13% of COLMAP's time, but comes within 10% of COLMAP on only <b>3 of 6</b>, short of the bar of 4</li>
+      <li>On 83 stretches of 40 images the depth AbsRel is <b>0.0146</b> against <b>0.0310</b> for the plane in the town and <b>0.0173</b> against <b>0.0360</b> in the valley at 2&nbsp;m between frames</li>
+      <li>COLMAP with the known camera is more accurate on all <b>6</b> test stretches. It takes 15 to 17 minutes per stretch against 5 to 8 seconds which is <b>120 to 190</b> times longer</li>
+      <li>The hybrid beats the model alone on <b>6 of 6</b> in 6 to 13% of COLMAP's time. It comes within 10% of COLMAP on only <b>3 of 6</b> which is short of the bar of 4</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/vggt-omega-drone-lidar">
         <img src="images/vggt-drone-town-2m.gif" width="670" height="704" loading="lazy"
              alt="A drone stretch over a town in 3D, circled once, its LiDAR points coloured by the depth error of VGGT-Omega alone, the hybrid and full COLMAP, and by the hybrid's change against the model.">
       </a>
-      <figcaption>The town's 2&nbsp;m test stretch, a typical one, its LiDAR points coloured by each
-      estimate's depth error and by the hybrid against the model &mdash; teal where its error is lower,
-      brown where it is higher. Data from UAVScenes and MARS-LVIG (HKU MaRS lab), CC BY-NC-SA 4.0.
+      <figcaption>The town's 2&nbsp;m test stretch which is a typical one. Its LiDAR points are coloured by each
+      estimate's depth error and by the hybrid against the model. Teal means the hybrid's error is lower and
+      brown means it is higher. Data from UAVScenes and MARS-LVIG (HKU MaRS lab) under CC BY-NC-SA 4.0.
       <a href="https://github.com/saverin0/vggt-omega-drone-lidar">Repository</a>.</figcaption>
     </figure>
   </div></article>
   <article class="proj" id="p6"><div class="card"><p class="no"><span class="gcp"></span>Signpost 6</p>
     <h3><a href="https://github.com/saverin0/uav-lidar-vs-satellite">Drone LiDAR against satellite products</a></h3>
     <p class="lede">How good are free satellite maps of height and land cover? I built a detailed map from a drone's laser scanner and checked the satellite products against it.</p>
-    <p>Raw drone sensor logs of two MARS-LVIG flights in Armenia, a river valley and a small town,
-    turned into DSM, DTM, nDSM and land cover at 0.5&nbsp;m with our own ROS&nbsp;2 readers, gyro-aided
-    poses and a ground filter written in numpy, then compared with Copernicus GLO-30, ESA WorldCover,
+    <p>Raw drone sensor logs of two MARS-LVIG flights in Armenia over a river valley and a small town.
+    They are turned into DSM, DTM, nDSM and land cover at 0.5&nbsp;m with our own ROS&nbsp;2 readers, gyro-aided
+    poses and a ground filter written in numpy. The results are compared with Copernicus GLO-30, ESA WorldCover,
     a global canopy height map, Sentinel-2 and OpenStreetMap.</p>
     <ul class="stats">
-      <li>GLO-30 against the drone DSM on bare ground, RMSE <b>0.80&nbsp;m</b> in the valley and <b>0.45&nbsp;m</b> in the town</li>
-      <li>Over buildings GLO-30 sits <b>0.74&nbsp;m</b> below the drone top surface (median of 72 posts), over trees <b>4.76&nbsp;m</b> and <b>2.31&nbsp;m</b> below</li>
-      <li>WorldCover agrees on <b>82%</b> of the valley and <b>32%</b> of the town, where it calls the gardens trees and grass; <b>78%</b> of the drone built-up pixels are built-up to WorldCover too</li>
+      <li>GLO-30 against the drone DSM on bare ground has an RMSE of <b>0.80&nbsp;m</b> in the valley and <b>0.45&nbsp;m</b> in the town</li>
+      <li>Over buildings GLO-30 sits <b>0.74&nbsp;m</b> below the drone top surface (median of 72 posts). Over trees it sits <b>4.76&nbsp;m</b> and <b>2.31&nbsp;m</b> below</li>
+      <li>WorldCover agrees on <b>82%</b> of the valley and <b>32%</b> of the town where it calls the gardens trees and grass. <b>78%</b> of the drone built-up pixels are built-up to WorldCover too</li>
       <li>The canopy height map misses <b>85%</b> and <b>53%</b> of the drone vegetation 2&nbsp;m or taller</li>
-      <li><b>245</b> and <b>324</b> million points, overlapping flight lines agree to <b>0.04&nbsp;m</b> and <b>0.02&nbsp;m</b> RMS</li>
+      <li><b>245</b> and <b>324</b> million points. Overlapping flight lines agree to <b>0.04&nbsp;m</b> and <b>0.02&nbsp;m</b> RMS</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/uav-lidar-vs-satellite">
         <img src="images/uav-lidar-valley.gif" width="900" height="600" loading="lazy"
              alt="Eight frames of the valley flight on one map, the drone DSM, DTM and land cover at 0.5 m, then the Copernicus DEM, ESA WorldCover, the Meta and WRI canopy height map, Sentinel-2 and OpenStreetMap.">
       </a>
-      <figcaption>The valley flight, the drone products and the five public layers they are checked
-      against, on the same map. Drone data from MARS-LVIG (HKU MaRS lab) and UAVScenes, CC BY-NC-SA 4.0,
-      with Copernicus GLO-30, ESA WorldCover, the Meta and WRI canopy height map (CC BY 4.0), Sentinel-2
+      <figcaption>The valley flight with the drone products and the five public layers they are checked
+      against on the same map. Drone data from MARS-LVIG (HKU MaRS lab) and UAVScenes under CC BY-NC-SA 4.0.
+      Public layers are Copernicus GLO-30, ESA WorldCover, the Meta and WRI canopy height map (CC BY 4.0), Sentinel-2
       and &copy; OpenStreetMap contributors (ODbL).
       <a href="https://github.com/saverin0/uav-lidar-vs-satellite">Repository</a>.</figcaption>
     </figure>
@@ -309,36 +309,36 @@
   <article class="proj" id="p7"><div class="card"><p class="no"><span class="gcp"></span>Signpost 7</p>
     <h3><a href="https://github.com/saverin0/Change-Detection-Using-Dinov3">Change detection with frozen DINOv3 features</a></h3>
     <p class="lede">Finding new buildings by comparing two satellite pictures of the same place from different times. A very small add-on on a ready-made model was enough.</p>
-    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings, over SpaceNet-7
-    monthly imagery and LEVIR-CD, with decoder designs compared on identical features.</p>
+    <p>Building change detection on frozen satellite-pretrained DINOv3 embeddings over SpaceNet-7
+    monthly imagery and LEVIR-CD. Decoder designs are compared on identical features.</p>
     <ul class="stats">
-      <li>LEVIR-CD test F1 <b>0.910</b>, IoU <b>0.835</b> &mdash; difference head, <b>0.56M</b> parameters</li>
-      <li>Cross-attention head, <b>0.83M</b> parameters, F1 <b>0.908</b>. The smaller head was the one to keep</li>
-      <li>SpaceNet-7 monthly change F1 <b>0.178</b>, building IoU <b>0.704</b> &mdash; a far harder task</li>
-      <li>Training-free embedding baselines reach F1 <b>0.013&ndash;0.019</b>, so the training carries the result</li>
+      <li>LEVIR-CD test F1 <b>0.910</b> and IoU <b>0.835</b> for the difference head with <b>0.56M</b> parameters</li>
+      <li>The cross-attention head with <b>0.83M</b> parameters reaches F1 <b>0.908</b>. The smaller head was the one to keep</li>
+      <li>SpaceNet-7 monthly change F1 <b>0.178</b> and building IoU <b>0.704</b> on a far harder task</li>
+      <li>Training-free embedding baselines reach F1 <b>0.013&ndash;0.019</b>. The training carries the result</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">
         <img src="images/dinov3-levir.jpg" width="1300" height="658" loading="lazy"
              alt="Two LEVIR-CD test pairs in four columns, the before image, the after image, the ground truth change mask, and the prediction coloured green for true positives, red for false positives and blue for missed change.">
       </a>
-      <figcaption>Two LEVIR-CD test pairs. From left, before, after, ground truth change mask, and the
-      difference head&rsquo;s prediction &mdash; green is correct, red a false alarm, blue missed change.
+      <figcaption>Two LEVIR-CD test pairs. From left to right are before, after, the ground truth change mask and the
+      difference head&rsquo;s prediction. Green is correct, red a false alarm and blue missed change.
       <a href="https://github.com/saverin0/Change-Detection-Using-Dinov3/blob/main/05_levir_cd_bitemporal.ipynb">Notebook</a>.</figcaption>
     </figure>
   </div></article>
   <article class="proj" id="p8"><div class="card"><p class="no"><span class="gcp"></span>Signpost 8</p>
     <h3><a href="https://github.com/saverin0/owl-caribou-overhead">Overhead caribou detectors across herds and years</a></h3>
     <p class="lede">Finding caribou in pictures taken from a plane. I tested four ready-made animal detectors on a new herd and a new year and looked at where they miss animals.</p>
-    <p>Cross-herd, cross-year evaluation of four overhead detection models (one caribou-specific) on
-    aerial survey imagery of the Central Arctic Herd, Alaska, 2022, after development on the Porcupine
-    Herd, 2017. Error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
+    <p>Cross-herd and cross-year evaluation of four overhead detection models (one caribou-specific) on
+    aerial survey imagery of the Central Arctic Herd in Alaska from 2022 after development on the Porcupine
+    Herd from 2017. With error bars from resampled mosaics, a failure analysis and a threshold sweep.</p>
     <ul class="stats">
-      <li>Locked test domain of <b>2,607</b> patches from 43 mosaics, <b>12,456</b> annotated animals</li>
-      <li>The two best models tie threshold-free, with average precision <b>0.978</b> vs <b>0.977</b>, paired difference <b>+0.001</b> [&minus;0.004, +0.008] over 2,000 resamples</li>
-      <li>The gap at the fixed setting is an operating-point effect; one model holds F1 above <b>0.95</b> for any relative cut from 0.15 to 0.55, the other only from 0.35 to 0.60</li>
-      <li>A 16 px border band is <b>12%</b> of the area but holds <b>53%</b> of the errors; at full resolution most are real caribou the patch&rsquo;s ground truth does not list</li>
-      <li>The two remaining models trail clearly, with average precision <b>0.927</b> and <b>0.919</b></li>
+      <li>Locked test domain of <b>2,607</b> patches from 43 mosaics with <b>12,456</b> annotated animals</li>
+      <li>The two best models tie threshold-free with average precision <b>0.978</b> vs <b>0.977</b>. The paired difference is <b>+0.001</b> [&minus;0.004, +0.008] over 2,000 resamples</li>
+      <li>The gap at the fixed setting is an operating-point effect. One model holds F1 above <b>0.95</b> for any relative cut from 0.15 to 0.55 and the other only from 0.35 to 0.60</li>
+      <li>A 16 px border band is <b>12%</b> of the area but holds <b>53%</b> of the errors. At full resolution most are real caribou the patch&rsquo;s ground truth does not list</li>
+      <li>The two remaining models trail clearly with average precision <b>0.927</b> and <b>0.919</b></li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/owl-caribou-overhead">
@@ -346,31 +346,31 @@
              alt="Eight aerial survey patches where the best detector missed the most caribou in clear view. Found animals are green, misses orange circles, false alarms pink crosses, the dashed line is the border band.">
       </a>
       <figcaption>The eight patches where the best model missed the most animals in clear view. Found animals are
-      green, misses orange circles, false alarms pink crosses, the dashed line the 16 px border band. The misses
-      have no single cause, among them fully visible adults, two close animals covered by one detection, and points placed at
-      the wrong end of the body. Survey imagery from the Zenodo release, CC BY-NC-SA 4.0.
+      green, misses are orange circles and false alarms are pink crosses. The dashed line is the 16 px border band. The misses
+      have no single cause. Among them are fully visible adults, two close animals covered by one detection and points placed at
+      the wrong end of the body. Survey imagery from the Zenodo release under CC BY-NC-SA 4.0.
       <a href="https://github.com/saverin0/owl-caribou-overhead">Repository</a>.</figcaption>
     </figure>
   </div></article>
   <article class="proj" id="p9"><div class="card"><p class="no"><span class="gcp"></span>Signpost 9</p>
     <h3><a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2">Winter wheat vegetation indices for Bavaria</a></h3>
     <p class="lede">How green the winter wheat is in every district of Bavaria. Measured from satellite pictures for each month from March to June in the years 2017 to 2024.</p>
-    <p>Monthly NDVI and NIRv for winter wheat across every district of Bavaria, from Sentinel-2
+    <p>Monthly NDVI and NIRv for winter wheat across every district of Bavaria. They come from Sentinel-2
     composites masked with yearly 10 m crop type maps and aggregated with exact partial-pixel zonal
     statistics. The Sentinel-2 half of a two-person MSc capstone.</p>
     <ul class="stats">
-      <li><b>96</b> NUTS-3 regions, March to June, <b>2017&ndash;2024</b></li>
-      <li><b>1.13 TB</b> of input imagery, 4,768 GeoTIFFs across 29 MGRS tiles per month</li>
-      <li><b>1.64 billion</b> winter wheat pixels at 10 m, processed in <b>5.5 h</b> on one A100</li>
-      <li>Over <b>151,793</b> OCO-2 footprints, solar-induced fluorescence tracks NIRv (<b>r = 0.54</b>) better than NDVI (<b>r = 0.42</b>)</li>
+      <li><b>96</b> NUTS-3 regions from March to June in <b>2017&ndash;2024</b></li>
+      <li><b>1.13 TB</b> of input imagery in 4,768 GeoTIFFs across 29 MGRS tiles per month</li>
+      <li><b>1.64 billion</b> winter wheat pixels at 10 m processed in <b>5.5 h</b> on one A100</li>
+      <li>Over <b>151,793</b> OCO-2 footprints solar-induced fluorescence tracks NIRv (<b>r = 0.54</b>) better than NDVI (<b>r = 0.42</b>)</li>
     </ul>
     <figure>
       <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">
         <img src="images/bavaria-ndvi.jpg" width="1400" height="659" loading="lazy"
              alt="Line chart of winter wheat NDVI for March to June, one line per year from 2017 to 2024, peaking in May.">
       </a>
-      <figcaption>Winter wheat NDVI across Bavaria, March to June, one line per year from 2017 to
-      2024, with error bars over the 96 districts. Every year peaks in May.
+      <figcaption>Winter wheat NDVI across Bavaria from March to June with one line per year from 2017 to
+      2024 and error bars over the 96 districts. Every year peaks in May.
       <a href="https://github.com/saverin0/bavaria-wheat-sentinel2-oco2/blob/main/notebooks/02_wheat_ndvi_nirv_pipeline.ipynb">Notebook</a>.</figcaption>
     </figure>
   </div></article>
